@@ -7,18 +7,64 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A401B6AF2C52EB0B00F6CFE5 /* ValuesRecognizedPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A401B6AE2C52EB0B00F6CFE5 /* ValuesRecognizedPayload.swift */; };
+		A40CE4672C518D480063414E /* DiceValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE4662C518D480063414E /* DiceValue.swift */; };
+		A40CE46B2C5278810063414E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE46A2C5278810063414E /* GameState.swift */; };
+		A40CE46D2C5278960063414E /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE46C2C5278960063414E /* Player.swift */; };
+		A40CE46F2C5279420063414E /* DiceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE46E2C5279420063414E /* DiceState.swift */; };
+		A40CE4712C5279B50063414E /* OnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE4702C5279B50063414E /* OnlineView.swift */; };
+		A40CE4732C527AA90063414E /* ViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE4722C527AA90063414E /* ViewType.swift */; };
+		A40CE4782C527C0E0063414E /* GameClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE4772C527C0E0063414E /* GameClient.swift */; };
+		A40CE47B2C527C210063414E /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A40CE47A2C527C210063414E /* SocketIO */; };
+		A40CE47D2C527C340063414E /* GameClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE47C2C527C340063414E /* GameClientDelegate.swift */; };
+		A40CE47F2C527C740063414E /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE47E2C527C740063414E /* RootView.swift */; };
+		A40CE4812C527D090063414E /* LobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40CE4802C527D090063414E /* LobbyView.swift */; };
+		A41E95F42C59828F00025E46 /* LocalLobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E95F32C59828F00025E46 /* LocalLobbyView.swift */; };
+		A41E95F62C59839500025E46 /* LocalGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E95F52C59839500025E46 /* LocalGameController.swift */; };
+		A41E95F82C59848F00025E46 /* LocalGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E95F72C59848F00025E46 /* LocalGameState.swift */; };
+		A470F3C12C5AB3CE00430BB8 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A470F3C02C5AB3CE00430BB8 /* AudioManager.swift */; };
+		A48991F22C6020E9000F93A7 /* WinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48991F12C6020E9000F93A7 /* WinView.swift */; };
+		A4934BDD2C58379400196255 /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4934BDC2C58379400196255 /* Properties.swift */; };
+		A4952DF72C57E6920019C0B4 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4952DF62C57E6920019C0B4 /* StartView.swift */; };
+		A4952DF92C57FC350019C0B4 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4952DF82C57FC350019C0B4 /* MenuView.swift */; };
 		A49CC8102C51641E00CFF838 /* GambleGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC80F2C51641E00CFF838 /* GambleGameApp.swift */; };
 		A49CC8122C51641E00CFF838 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC8112C51641E00CFF838 /* ContentView.swift */; };
 		A49CC8142C51641F00CFF838 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A49CC8132C51641F00CFF838 /* Assets.xcassets */; };
 		A49CC8172C51641F00CFF838 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A49CC8162C51641F00CFF838 /* Preview Assets.xcassets */; };
+		A49CC81E2C51648400CFF838 /* DiceScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC81D2C51648400CFF838 /* DiceScene.swift */; };
+		A49CC8202C51649F00CFF838 /* SceneKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC81F2C51649F00CFF838 /* SceneKitView.swift */; };
+		A49CC8222C5177B800CFF838 /* DicePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC8212C5177B800CFF838 /* DicePosition.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A401B6AE2C52EB0B00F6CFE5 /* ValuesRecognizedPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesRecognizedPayload.swift; sourceTree = "<group>"; };
+		A40CE4662C518D480063414E /* DiceValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceValue.swift; sourceTree = "<group>"; };
+		A40CE46A2C5278810063414E /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		A40CE46C2C5278960063414E /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		A40CE46E2C5279420063414E /* DiceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceState.swift; sourceTree = "<group>"; };
+		A40CE4702C5279B50063414E /* OnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineView.swift; sourceTree = "<group>"; };
+		A40CE4722C527AA90063414E /* ViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewType.swift; sourceTree = "<group>"; };
+		A40CE4772C527C0E0063414E /* GameClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameClient.swift; sourceTree = "<group>"; };
+		A40CE47C2C527C340063414E /* GameClientDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameClientDelegate.swift; sourceTree = "<group>"; };
+		A40CE47E2C527C740063414E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		A40CE4802C527D090063414E /* LobbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyView.swift; sourceTree = "<group>"; };
+		A41E95F32C59828F00025E46 /* LocalLobbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLobbyView.swift; sourceTree = "<group>"; };
+		A41E95F52C59839500025E46 /* LocalGameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGameController.swift; sourceTree = "<group>"; };
+		A41E95F72C59848F00025E46 /* LocalGameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGameState.swift; sourceTree = "<group>"; };
+		A470F3C02C5AB3CE00430BB8 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		A470F3C42C5ABB9900430BB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A48991F12C6020E9000F93A7 /* WinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinView.swift; sourceTree = "<group>"; };
+		A4934BDC2C58379400196255 /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
+		A4952DF62C57E6920019C0B4 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		A4952DF82C57FC350019C0B4 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		A49CC80C2C51641E00CFF838 /* GambleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GambleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A49CC80F2C51641E00CFF838 /* GambleGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GambleGameApp.swift; sourceTree = "<group>"; };
 		A49CC8112C51641E00CFF838 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A49CC8132C51641F00CFF838 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A49CC8162C51641F00CFF838 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A49CC81D2C51648400CFF838 /* DiceScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceScene.swift; sourceTree = "<group>"; };
+		A49CC81F2C51649F00CFF838 /* SceneKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneKitView.swift; sourceTree = "<group>"; };
+		A49CC8212C5177B800CFF838 /* DicePosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DicePosition.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,12 +72,78 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A40CE47B2C527C210063414E /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A40CE4682C5276510063414E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A49CC8112C51641E00CFF838 /* ContentView.swift */,
+				A49CC81F2C51649F00CFF838 /* SceneKitView.swift */,
+				A40CE4702C5279B50063414E /* OnlineView.swift */,
+				A40CE47E2C527C740063414E /* RootView.swift */,
+				A40CE4802C527D090063414E /* LobbyView.swift */,
+				A4952DF62C57E6920019C0B4 /* StartView.swift */,
+				A4952DF82C57FC350019C0B4 /* MenuView.swift */,
+				A41E95F32C59828F00025E46 /* LocalLobbyView.swift */,
+				A48991F12C6020E9000F93A7 /* WinView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A40CE4692C5276750063414E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A40CE4662C518D480063414E /* DiceValue.swift */,
+				A49CC8212C5177B800CFF838 /* DicePosition.swift */,
+				A40CE46A2C5278810063414E /* GameState.swift */,
+				A40CE46C2C5278960063414E /* Player.swift */,
+				A40CE46E2C5279420063414E /* DiceState.swift */,
+				A40CE4722C527AA90063414E /* ViewType.swift */,
+				A401B6AE2C52EB0B00F6CFE5 /* ValuesRecognizedPayload.swift */,
+				A41E95F72C59848F00025E46 /* LocalGameState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A40CE4762C527B000063414E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A40CE4772C527C0E0063414E /* GameClient.swift */,
+				A40CE47C2C527C340063414E /* GameClientDelegate.swift */,
+				A41E95F52C59839500025E46 /* LocalGameController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		A470F3BE2C5AB39E00430BB8 /* Properties */ = {
+			isa = PBXGroup;
+			children = (
+				A4934BDC2C58379400196255 /* Properties.swift */,
+			);
+			path = Properties;
+			sourceTree = "<group>";
+		};
+		A470F3BF2C5AB3B600430BB8 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				A470F3C02C5AB3CE00430BB8 /* AudioManager.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		A4934BDE2C5846AB00196255 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				A49CC81D2C51648400CFF838 /* DiceScene.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
 		A49CC8032C51641E00CFF838 = {
 			isa = PBXGroup;
 			children = (
@@ -51,8 +163,14 @@
 		A49CC80E2C51641E00CFF838 /* GambleGame */ = {
 			isa = PBXGroup;
 			children = (
+				A470F3C42C5ABB9900430BB8 /* Info.plist */,
+				A470F3BF2C5AB3B600430BB8 /* Audio */,
+				A470F3BE2C5AB39E00430BB8 /* Properties */,
+				A4934BDE2C5846AB00196255 /* Scenes */,
+				A40CE4762C527B000063414E /* Controllers */,
+				A40CE4692C5276750063414E /* Models */,
+				A40CE4682C5276510063414E /* Views */,
 				A49CC80F2C51641E00CFF838 /* GambleGameApp.swift */,
-				A49CC8112C51641E00CFF838 /* ContentView.swift */,
 				A49CC8132C51641F00CFF838 /* Assets.xcassets */,
 				A49CC8152C51641F00CFF838 /* Preview Content */,
 			);
@@ -83,6 +201,9 @@
 			dependencies = (
 			);
 			name = GambleGame;
+			packageProductDependencies = (
+				A40CE47A2C527C210063414E /* SocketIO */,
+			);
 			productName = GambleGame;
 			productReference = A49CC80C2C51641E00CFF838 /* GambleGame.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +232,9 @@
 				Base,
 			);
 			mainGroup = A49CC8032C51641E00CFF838;
+			packageReferences = (
+				A40CE4792C527C210063414E /* XCRemoteSwiftPackageReference "socket" */,
+			);
 			productRefGroup = A49CC80D2C51641E00CFF838 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,8 +261,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4952DF72C57E6920019C0B4 /* StartView.swift in Sources */,
+				A41E95F62C59839500025E46 /* LocalGameController.swift in Sources */,
+				A40CE46B2C5278810063414E /* GameState.swift in Sources */,
+				A470F3C12C5AB3CE00430BB8 /* AudioManager.swift in Sources */,
+				A40CE46F2C5279420063414E /* DiceState.swift in Sources */,
+				A40CE4672C518D480063414E /* DiceValue.swift in Sources */,
+				A4934BDD2C58379400196255 /* Properties.swift in Sources */,
+				A40CE47D2C527C340063414E /* GameClientDelegate.swift in Sources */,
+				A40CE47F2C527C740063414E /* RootView.swift in Sources */,
+				A48991F22C6020E9000F93A7 /* WinView.swift in Sources */,
+				A40CE4812C527D090063414E /* LobbyView.swift in Sources */,
+				A49CC81E2C51648400CFF838 /* DiceScene.swift in Sources */,
+				A41E95F42C59828F00025E46 /* LocalLobbyView.swift in Sources */,
+				A41E95F82C59848F00025E46 /* LocalGameState.swift in Sources */,
+				A40CE4782C527C0E0063414E /* GameClient.swift in Sources */,
 				A49CC8122C51641E00CFF838 /* ContentView.swift in Sources */,
+				A40CE4732C527AA90063414E /* ViewType.swift in Sources */,
+				A40CE4712C5279B50063414E /* OnlineView.swift in Sources */,
+				A40CE46D2C5278960063414E /* Player.swift in Sources */,
+				A4952DF92C57FC350019C0B4 /* MenuView.swift in Sources */,
+				A401B6AF2C52EB0B00F6CFE5 /* ValuesRecognizedPayload.swift in Sources */,
+				A49CC8202C51649F00CFF838 /* SceneKitView.swift in Sources */,
 				A49CC8102C51641E00CFF838 /* GambleGameApp.swift in Sources */,
+				A49CC8222C5177B800CFF838 /* DicePosition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,21 +421,25 @@
 				DEVELOPMENT_TEAM = MKFPA75DUY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GambleGame/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Gamble;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.dice-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ob.ka.GambleGame;
+				PRODUCT_BUNDLE_IDENTIFIER = ob.ka.Gamble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -304,21 +454,25 @@
 				DEVELOPMENT_TEAM = MKFPA75DUY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GambleGame/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Gamble;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.dice-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ob.ka.GambleGame;
+				PRODUCT_BUNDLE_IDENTIFIER = ob.ka.Gamble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -344,6 +498,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A40CE4792C527C210063414E /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A40CE47A2C527C210063414E /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A40CE4792C527C210063414E /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A49CC8042C51641E00CFF838 /* Project object */;
 }
