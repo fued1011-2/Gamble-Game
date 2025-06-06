@@ -256,7 +256,7 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
         
         if let result = hitResults?.first {
             let node = result.node
-            if !takenDiceNodes.contains(node) && isLocalGame ? localGame.thrown : game.thrown {
+            if !takenDiceNodes.contains(node) && (isLocalGame ? localGame.thrown : game.thrown) {
                 if ((node.physicsBody?.isResting) == true || tapped == true) {
                     if let index = diceNodes.firstIndex(of: node),
                        let diceValue = diceValues[safe: index]?.value {
@@ -1096,8 +1096,8 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
         
         let counts = [2, 3, 4, 6]
         for count in counts {
-            if game.selectedDice.contains(where: { $0.value == count }) {
-                if game.selectedDice.filter({ $0.value == count }).count < 3 {
+            if localGame.selectedDice.contains(where: { $0.value == count }) {
+                if localGame.selectedDice.filter({ $0.value == count }).count < 3 {
                     return false
                 }
             }

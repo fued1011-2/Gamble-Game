@@ -7,7 +7,7 @@ class GameClient {
     weak var delegate: GameClientDelegate?
 
     init() {
-        manager = SocketManager(socketURL: URL(string: "http://192.168.178.102:3000")!, config: [.log(true), .compress])
+        manager = SocketManager(socketURL: URL(string: "http://localhost:3000")!, config: [.log(true), .compress])
         socket = manager.defaultSocket
         setupSocket()
     }
