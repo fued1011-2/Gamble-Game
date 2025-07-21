@@ -34,6 +34,7 @@
 		A49CC81E2C51648400CFF838 /* DiceScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC81D2C51648400CFF838 /* DiceScene.swift */; };
 		A49CC8202C51649F00CFF838 /* SceneKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC81F2C51649F00CFF838 /* SceneKitView.swift */; };
 		A49CC8222C5177B800CFF838 /* DicePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49CC8212C5177B800CFF838 /* DicePosition.swift */; };
+		A4FA6E3E2E296B2C00FD818E /* RulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FA6E3D2E296B2C00FD818E /* RulesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		A49CC81D2C51648400CFF838 /* DiceScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceScene.swift; sourceTree = "<group>"; };
 		A49CC81F2C51649F00CFF838 /* SceneKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneKitView.swift; sourceTree = "<group>"; };
 		A49CC8212C5177B800CFF838 /* DicePosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DicePosition.swift; sourceTree = "<group>"; };
+		A4FA6E3D2E296B2C00FD818E /* RulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 		A40CE4682C5276510063414E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A4FA6E3D2E296B2C00FD818E /* RulesView.swift */,
 				A49CC8112C51641E00CFF838 /* ContentView.swift */,
 				A49CC81F2C51649F00CFF838 /* SceneKitView.swift */,
 				A40CE4702C5279B50063414E /* OnlineView.swift */,
@@ -277,6 +280,7 @@
 				A41E95F82C59848F00025E46 /* LocalGameState.swift in Sources */,
 				A40CE4782C527C0E0063414E /* GameClient.swift in Sources */,
 				A49CC8122C51641E00CFF838 /* ContentView.swift in Sources */,
+				A4FA6E3E2E296B2C00FD818E /* RulesView.swift in Sources */,
 				A40CE4732C527AA90063414E /* ViewType.swift in Sources */,
 				A40CE4712C5279B50063414E /* OnlineView.swift in Sources */,
 				A40CE46D2C5278960063414E /* Player.swift in Sources */,

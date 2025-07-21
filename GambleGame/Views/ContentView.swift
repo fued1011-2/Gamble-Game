@@ -4,6 +4,11 @@ struct MainView: View {
     @ObservedObject var scene: DiceScene
     @State private var showingLeaveConfirmation = false
     @State private var showPlayerSelectionPopup = false
+    @State private var showEndHint = false
+    @State private var endHintMessage = ""
+    @State private var showRollHint = false
+    @State private var rollHintMessage = ""
+    @State private var farkleHintMessage = "That’s a Farkle! No points this turn."
 
     var body: some View {
         ZStack {
@@ -39,6 +44,16 @@ struct MainView: View {
                                 if scene.localGame.selectedDice.count != 0 && scene.isValidSelection {
                                     scene.calculateRoundScoreLocal()
                                     scene.rollDice()
+                                } else {
+                                    if scene.localGame.selectedDice.count != 0 && !scene.isValidSelection {
+                                        rollHintMessage = "Only scoring dice can be selected."
+                                    } else {
+                                        rollHintMessage = "Select at least one scoring die before rolling again."
+                                    }
+                                    showRollHint = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                        showRollHint = false
+                                    }
                                 }
                             }
                         } else {
@@ -74,6 +89,18 @@ struct MainView: View {
                                        && !scene.localGame.selectedDice.isEmpty
                                        && scene.isValidSelection) {
                                 scene.endRoundLocal()
+                                scene.turnChangeMessage = "It’s now " + scene.localGame.players[scene.localGame.currentPlayerIndex].username + "'s turn."
+                                scene.showTurnChangeHint = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    scene.showTurnChangeHint = false
+                                }
+
+                            } else {
+                                endHintMessage = "You need at least 350 points before ending a turn."
+                                showEndHint = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    showEndHint = false
+                                }
                             }
                         } else {
                             if (scene.username == scene.game.players[scene.game.currentPlayerIndex].username) {
@@ -93,7 +120,7 @@ struct MainView: View {
                         Text("End")
                             .font(.system(size: 50, weight: .heavy, design: Font.Design.serif))
                             .background(Color.clear)
-                            .foregroundColor(.black).opacity(scene.isLocalGame ? (scene.localGame.roundScore + scene.localGame.throwScore >= 350 && !scene.localGame.selectedDice.isEmpty && scene.isValidSelection ? 0.9 : 0.6) : (scene.game.roundScore + scene.game.throwScore >= 350 && !scene.game.selectedDice.isEmpty && scene.isValidSelection ? 0.9 : 0.6))
+                            .foregroundColor(.black).opacity(scene.isLocalGame ? (scene.localGame.roundScore + scene.localGame.throwScore >= 350 && !scene.localGame.selectedDice.isEmpty && scene.isValidSelection ? 0.9 : 0.4) : (scene.game.roundScore + scene.game.throwScore >= 350 && !scene.game.selectedDice.isEmpty && scene.isValidSelection ? 0.9 : 0.4))
 
                     }
                     .sheet(isPresented: $showPlayerSelectionPopup) {
@@ -122,7 +149,7 @@ struct MainView: View {
                     scene.showGotKickedPopUp = false
                 }
             } message: {
-                var playerWith10K = scene.game.players.first(where: {$0.score >= 10000})
+                let playerWith10K = scene.game.players.first(where: {$0.score >= 10000})
                 Text("\(String(describing: playerWith10K?.username)) has reached 10000 points. Last Rounds started.")
             }
             .alert(isPresented: $showingLeaveConfirmation) {
@@ -155,6 +182,94 @@ struct MainView: View {
                     )
                 }
             }
+            
+            if showEndHint {
+                VStack {
+                    Spacer()
+                        .frame(height: 200)
+                    HStack {
+                        Spacer()
+                        Text(endHintMessage)
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 15, weight: .heavy, design: Font.Design.serif))
+                            .padding()
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .transition(.opacity)
+                            .animation(.easeInOut, value: showEndHint)
+                            .frame(width: 330)
+                        Spacer()
+                    }
+                    .padding(.bottom, 50)
+                }
+                .zIndex(1) // damit es über Buttons liegt
+            }
+            
+            if showRollHint {
+                VStack {
+                    Spacer()
+                        .frame(height: 200)
+                    HStack {
+                        Spacer()
+                        Text(rollHintMessage)
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 15, weight: .heavy, design: .serif))
+                            .padding()
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .transition(.opacity)
+                            .animation(.easeInOut, value: showRollHint)
+                            .frame(width: 330)
+                        Spacer()
+                    }
+                    .padding(.bottom, 50)
+                }
+                .zIndex(1)
+            }
+
+            if scene.showFarkleHint {
+                VStack {
+                    Spacer()
+                        .frame(height: 200)
+                    HStack {
+                        Spacer()
+                        Text(farkleHintMessage)
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 15, weight: .heavy, design: .serif))
+                            .padding()
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .transition(.opacity)
+                            .animation(.easeInOut, value: scene.showFarkleHint)
+                            .frame(width: 330)
+                        Spacer()
+                    }
+                    .padding(.bottom, 50)
+                }
+                .zIndex(1)
+            }
+            
+            if scene.showTurnChangeHint {
+                VStack {
+                    Spacer()
+                        .frame(height: 200)
+                    HStack {
+                        Spacer()
+                        Text(scene.turnChangeMessage)
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 15, weight: .heavy, design: .serif))
+                            .padding()
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .transition(.opacity)
+                            .animation(.easeInOut, value: scene.showTurnChangeHint)
+                            .frame(width: 330)
+                        Spacer()
+                    }
+                    .padding(.bottom, 50)
+                }
+                .zIndex(1)
+            }
         }
     }
 }
@@ -167,20 +282,26 @@ struct ScoreTable: View {
     
     var body: some View {
         VStack(spacing: 10) {
+            Text("Bank")
+                .font(.system(size: 30, weight: .heavy, design: Font.Design.serif))
+                .background(Color.clear)
+                .foregroundColor(Color.black.opacity(0.9))
+                .underline()
+            
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 20) {
                         ForEach(players.indices, id: \.self) { index in
                             VStack {
                                 Text(players[index].username)
-                                    .font(.system(size: 30, weight: .heavy, design: .serif))
+                                    .font(.system(size: 25, weight: .heavy, design: .serif))
                                     .underline(index == currentPlayerIndex)
                                 
                                 Text("\(players[index].score)")
-                                    .font(.system(size: 25, weight: .bold, design: .serif))
+                                    .font(.system(size: 20, weight: .bold, design: .serif))
                                     .padding(.top, 3)
                             }
-                            .frame(width: 100)
+                            .frame(width: 150)
                             .id(index)
                         }
                     }

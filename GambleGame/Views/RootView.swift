@@ -43,6 +43,9 @@ struct RootView: View {
                     case .winScreen:
                         WinView(scene: scene)
                             .transition(.opacity)
+                    case .rulesView:
+                        RulesView(scene: scene)
+                            .transition(.opacity)
                     }
                 }
             }

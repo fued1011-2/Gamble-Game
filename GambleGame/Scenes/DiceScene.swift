@@ -30,6 +30,7 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
     var takenDiceNodes: Set<SCNNode> = Set(minimumCapacity: 6)
     var dicePositionsAfterThrow: [SCNNode: SCNVector3] = [:]
     var tapped: Bool = false
+    var scoringIndices = Set<Int>()
     
     @Published var game: GameState
     @Published var username: String = ""
@@ -41,6 +42,9 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
     @Published var showGotKickedPopUp: Bool = false
     @Published var showStartedFinalRoundsPopUp: Bool = false
     private var gameClient: GameClient
+    @Published var showFarkleHint = false
+    @Published var showTurnChangeHint = false
+    @Published var turnChangeMessage = ""
     
     override init() {
         self.game = GameState(gameId: "0",
@@ -529,6 +533,7 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
         
         var count = 1
         diceNodes.forEach({ diceNode in
+            removeGlow(from: diceNode)
             if !selectedDiceNodes.contains(diceNode) {
                 diceNode.physicsBody?.clearAllForces()
                 switch count {
@@ -557,9 +562,30 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
             self.tapped = true
             self.checkDiceValues()
             self.checkDiceValuesAfterThrow()
+
+            let scoringIndices = self.getScoringDiceIndices(from: self.diceValues)
+
+            for (index, diceNode) in self.diceNodes.enumerated() {
+                if scoringIndices.contains(index) && !self.selectedDiceNodes.contains(diceNode) {
+                    self.applyGlow(to: diceNode, color: .green)
+                } else {
+                    self.removeGlow(from: diceNode)
+                }
+            }
             if (!self.isThrownDiceValid && self.isLocalGame) {
                 print("zero")
                 self.zero()
+                self.showFarkleHint = !self.isThrownDiceValid
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self.showFarkleHint = false
+                    
+                    self.turnChangeMessage = "It’s now " + self.localGame.players[self.localGame.currentPlayerIndex].username + "'s turn."
+                    self.showTurnChangeHint = true
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self.showTurnChangeHint = false
+                    }
+                }
             } else if (!self.isThrownDiceValid && !self.isLocalGame && self.game.players[self.game.currentPlayerIndex].username == self.username) {
                 print("zero")
                 self.zero()
@@ -1070,12 +1096,19 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
     }
     
     func localDiceSelected(index: Int, value: Int) {
+        let node = diceNodes[index]
+        
         if let diceIndex = localGame.selectedDice.firstIndex(where: { $0.index == index }) {
             // Wenn der Würfel bereits ausgewählt ist, entfernen wir ihn
             localGame.selectedDice.remove(at: diceIndex)
+            
+            if scoringIndices.contains(index) {
+                applyGlow(to: node, color: .green)
+            }
         } else {
             // Wenn der Würfel noch nicht ausgewählt ist, fügen wir ihn hinzu
             localGame.selectedDice.append(Dice(index: index, value: value))
+            removeGlow(from: node)
         }
         
         isValidSelection = localCheckSelectedDice()
@@ -1146,7 +1179,7 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
         localGame.throwScore = 0
         localGame.thrown = false
         
-        if localGame.players[localGame.currentPlayerIndex].score >= 10000 && localGame.isLastRound == false {
+        if localGame.players[localGame.currentPlayerIndex].score >= 1000 && localGame.isLastRound == false {
             localGame.isLastRound = true;
             localGame.winnerIndex = localGame.currentPlayerIndex
             localGame.lastRoundCounter += 1
@@ -1183,6 +1216,7 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
     
     func deleteLocalGame() {
         localGame.reset()
+        localGamePlayerCount = 1
     }
     
     func changeUsername(index: Int, newUsername: String) {
@@ -1352,6 +1386,81 @@ extension DiceScene: GameClientDelegate {
     func didChangeCreator(_ game: GameState) {
         DispatchQueue.main.async {
             self.game = game
+        }
+    }
+    
+    func getScoringDiceIndices(from diceValues: [DiceValue]) -> Set<Int> {
+        scoringIndices = Set<Int>()
+        let values = diceValues.map { $0.value }
+
+        // Hilfsfunktion: Indexe eines bestimmten Werts
+        func indices(for value: Int, maxCount: Int? = nil) -> [Int] {
+            var found: [Int] = []
+            for (index, die) in diceValues.enumerated() {
+                if die.value == value {
+                    found.append(index)
+                    if let max = maxCount, found.count == max { break }
+                }
+            }
+            return found
+        }
+
+        // Zähle Würfelwerte
+        let counts = values.reduce(into: [:]) { $0[$1, default: 0] += 1 }
+
+        // ✳️ Spezialfall: Straße (1–6)
+        let isStraight = Set(values) == Set(1...6)
+        if isStraight {
+            scoringIndices = Set(0..<6)
+            return scoringIndices
+        }
+
+        // ✳️ Spezialfall: Drei Paare
+        let pairs = counts.filter { $0.value == 2 }
+        if pairs.count == 3 {
+            scoringIndices = Set(0..<6)
+            return scoringIndices
+        }
+
+        // ✳️ Gruppen ab 3  mehr
+        for (value, count) in counts {
+            if count >= 3 {
+                // markiere alle, da alles Punkte bringt
+                scoringIndices.formUnion(indices(for: value))
+            }
+        }
+
+        for (index, die) in diceValues.enumerated() {
+            if die.value == 1 || die.value == 5 {
+                let totalOfThisValue = counts[die.value] ?? 0
+                if totalOfThisValue < 3 {
+                    scoringIndices.insert(index)
+                } else {
+                    // Mehr als 3? Zähle nur überzählige 1/5 zusätzlich (z. B. 5-5-5-5 → 4. Fünfer zählt 50 extra)
+                    let indexesOfThisValue = indices(for: die.value)
+                    let extras = indexesOfThisValue.dropFirst(3)
+                    if extras.contains(index) {
+                        scoringIndices.insert(index)
+                    }
+                }
+            }
+        }
+
+        return scoringIndices
+    }
+
+    
+    func applyGlow(to node: SCNNode, color: UIColor) {
+        node.geometry?.materials.forEach {
+            $0.emission.contents = color
+            $0.emission.intensity = 0.2
+        }
+    }
+
+    func removeGlow(from node: SCNNode) {
+        node.geometry?.materials.forEach {
+            $0.emission.contents = UIColor.black
+            $0.emission.intensity = 0.0
         }
     }
 }

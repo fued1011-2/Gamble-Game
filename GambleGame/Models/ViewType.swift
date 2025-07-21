@@ -7,4 +7,5 @@ enum ViewType {
     case main
     case online
     case winScreen
+    case rulesView
 }
