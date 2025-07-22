@@ -180,7 +180,7 @@ struct ScoreTable: View {
                                     .font(.system(size: 25, weight: .bold, design: .serif))
                                     .padding(.top, 3)
                             }
-                            .frame(width: 100)
+                            .frame(width: 150)
                             .id(index)
                         }
                     }
