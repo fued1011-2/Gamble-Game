@@ -9,7 +9,13 @@ struct RulesView: View {
                 HStack {
                     // Back Button
                     Button(action: {
-                        scene.currentView = .menu
+                        if scene.showRulesView == true {
+                            scene.showRulesView = false
+
+                        } else {
+                            scene.currentView = .menu
+
+                        }
                     }) {
                         Image("back_arrow")
                             .resizable()

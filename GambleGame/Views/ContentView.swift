@@ -135,14 +135,36 @@ struct MainView: View {
                 }
                 .padding(.bottom, 0)
                 
-                Button(action: {
-                    showingLeaveConfirmation = true
-                }) {
-                    Image("home_button")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 60, height: 60)
+                HStack {
+                    Spacer()
+                        .frame(width: 178)
+                    
+                    Button(action: {
+                        showingLeaveConfirmation = true
+                    }) {
+                        Image(systemName: "house.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.black.opacity(0.8))
+                    }
+                    
+                    Spacer()
+                        .frame(width: 95)
+                    
+                    Button(action: {
+                        scene.showRulesView = true
+                       }) {
+                           Image(systemName: "questionmark.circle")
+                               .resizable()
+                               .aspectRatio(contentMode: .fit)
+                               .frame(width: 50, height: 50)
+                               .foregroundColor(.black.opacity(0.8))
+                       }
+                    
+                    Spacer()
                 }
+
             }
             .alert("Final Rounds started", isPresented: $scene.showStartedFinalRoundsPopUp) {
                 Button("OK") {
@@ -270,6 +292,9 @@ struct MainView: View {
                 }
                 .zIndex(1)
             }
+        }
+        .sheet(isPresented: $scene.showRulesView) {
+            RulesView(scene: scene)
         }
     }
 }

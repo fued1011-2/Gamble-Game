@@ -45,6 +45,7 @@ class DiceScene: SCNScene, ObservableObject, SCNPhysicsContactDelegate {
     @Published var showFarkleHint = false
     @Published var showTurnChangeHint = false
     @Published var turnChangeMessage = ""
+    @Published var showRulesView = false
     
     override init() {
         self.game = GameState(gameId: "0",
