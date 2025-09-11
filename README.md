@@ -15,8 +15,9 @@ Gamble-Game is an iOS dice game built with SwiftUI and SceneKit. It supports loc
 - **Game mode selection**  
   In `MenuView` you can choose between local play and online mode. Online mode connects to a Socket.IO server, while local mode creates a new game.
 
-- **Online communication via Socket.IO**  
-  `GameClient` connects to `http://localhost:3000` and handles various Socket.IO events to synchronize game state.
+- **Online communication via Socket.IO**
+  `GameClient` connects to `http://localhost:3000` and handles various Socket.IO events to synchronize game state. The
+  server code lives in a separate repository, **Gamble-Server**.
 
 - **Local game logic and scoring**  
   `LocalGameController` calculates points based on selected dice combinations and manages round transitions.
@@ -45,7 +46,7 @@ GambleGame/
 
 - Xcode 15 or later  
 - iOS 17 SDK  
-- For online play: running Socket.IO server on `localhost:3000`
+- For online play: running Socket.IO server on `localhost:3000` from the **Gamble-Server** repository
 
 ---
 
@@ -54,7 +55,7 @@ GambleGame/
 1. Clone the repository and open it in Xcode.  
 2. Select a target device (simulator or physical device).  
 3. Build & run (`⌘R`).  
-4. For online games ensure the Socket.IO server is running on port 3000.
+4. For online games ensure the Socket.IO server from the **Gamble-Server** repository is running on port 3000.
 
 ---
 
