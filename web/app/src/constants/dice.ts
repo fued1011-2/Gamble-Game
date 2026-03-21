@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { DieSeed, FaceValue } from '../types/dice';
 
-export const CUP_POSITION: [number, number, number] = [0, 5.1, 7.2];
+export const CUP_POSITION: [number, number, number] = [7.1, 4.95, 1.15];
 
 /**
  * Luftiger gestaffelte Innenpunkte für eine ruhigere Sammelphase im Becher.

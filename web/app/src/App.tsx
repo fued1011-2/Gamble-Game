@@ -6,10 +6,7 @@ import { DiceCup } from './components/DiceCup';
 import { PhysicsDie } from './components/PhysicsDie';
 import { CupColliders, TrayColliders, TrayVisual } from './components/Tray';
 import { CUP_INTERIOR_POINTS, CUP_POSITION, INITIAL_DICE } from './constants/dice';
-import {
-  ACTIVE_SETTLE_POSITIONS,
-  KEEP_SETTLE_POSITIONS,
-} from './constants/layout';
+import { ACTIVE_SETTLE_POSITIONS, KEEP_SETTLE_POSITIONS } from './constants/layout';
 import type { DieSeed, FaceValue, RollPhase } from './types/dice';
 
 export default function App() {
@@ -143,9 +140,9 @@ export default function App() {
           return {
             ...die,
             position: [
-              CUP_POSITION[0] + (index - 2.5) * 0.06,
-              CUP_POSITION[1] - 1.06 + (index % 2) * 0.03,
-              CUP_POSITION[2] - 2.55 + ((index % 3) - 1) * 0.06,
+              3.55 + (index % 2) * 0.48 - (index > 3 ? 0.22 : 0),
+              3.88 + (index % 3) * 0.07,
+              0.85 - index * 0.42,
             ] as [number, number, number],
             placementKey: `cup-pour-${nextRoll}-${die.id}-${index}`,
           };
@@ -200,7 +197,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 3D: Auswahlfeedback per Hover-/Tap-Highlight schärfen, ohne die Ruhe im Tray zu zerstören.</p>
+          <p>Arbeitsblock 3E: Kamera auf vogelperspektivische 51WWG-Lesart umbauen, Keep-Zone oben und Becher rechts.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -215,7 +212,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Aktueller Fokus:</strong> Keep-Zone ruhiger und ordentlicher wirken lassen, während aktive Würfel im Tray stabil und lesbar bleiben.
+        <strong>Aktueller Fokus:</strong> Szene stärker wie 51 Worldwide Games lesen lassen: Blick von oben, Keep-Zone oben und Becher klar rechts neben dem Tray.
       </div>
 
       <div className="value-panel">
@@ -223,7 +220,7 @@ export default function App() {
         <div><strong>Detected Total:</strong> {activeDice.reduce((sum, die) => sum + die.topValue, 0)}</div>
       </div>
 
-      <Canvas shadows camera={{ position: [0, 10.8, 13.8], fov: 32 }}>
+      <Canvas shadows camera={{ position: [0, 15.8, 6.1], fov: 24 }}>
         <color attach="background" args={['#21382c']} />
         <fog attach="fog" args={['#21382c', 10, 24]} />
         <ambientLight intensity={1.18} />
@@ -248,8 +245,8 @@ export default function App() {
           ))}
         </Physics>
         <TrayVisual />
-        <ContactShadows position={[0, 0.12, 0]} opacity={0.5} scale={20} blur={2.4} far={10} />
-        <OrbitControls enablePan={false} minPolarAngle={0.72} maxPolarAngle={1.18} minDistance={10.5} maxDistance={20} />
+        <ContactShadows position={[0, 0.12, 0]} opacity={0.48} scale={20} blur={2.6} far={10} />
+        <OrbitControls enablePan={false} target={[0, 0.8, -0.45]} minPolarAngle={0.34} maxPolarAngle={0.58} minDistance={12.5} maxDistance={18} />
       </Canvas>
     </div>
   );

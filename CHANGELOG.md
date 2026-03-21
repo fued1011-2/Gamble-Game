@@ -30,3 +30,4 @@
 - Keep-/Selection-Layer weiter geschärft: aktive und zurückgelegte Würfel visuell klarer getrennt
 - Keep-Zone ruhiger geordnet und optisch stärker als eigener Ablagebereich markiert
 - Auswahlfeedback verbessert: Hover-/Select-Highlight macht interaktive Würfel klarer erkennbar
+- Kamerakomposition näher an 51WWG ausgerichtet: steilere Vogelperspektive, Keep-Zone oben, Becher rechts vom Tray
