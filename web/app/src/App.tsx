@@ -210,7 +210,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 2B: längere Ruhephase nach dem Wurf und stabilerer Übergang zurück auf idle.</p>
+          <p>Arbeitsblock 3A: Auswahl-/Keep-Flow verbessert, aktive Würfel bleiben im Tray statt in den Becher zurückzuspringen.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
