@@ -55,9 +55,14 @@ export function TrayVisual() {
         <boxGeometry args={[0.45, 1.35, 10.9]} />
         <meshStandardMaterial color="#241a16" roughness={0.82} metalness={0.08} />
       </mesh>
+      {/* Keep-/Ablagezone: bewusst als eigener Funktionsbereich im Tray markiert */}
       <mesh receiveShadow position={[0, 0.46, -4.45]}>
         <boxGeometry args={[9.5, 0.05, 1.25]} />
         <meshStandardMaterial color="#304f2e" roughness={0.88} metalness={0.02} />
+      </mesh>
+      <mesh receiveShadow position={[0, 0.47, -3.78]}>
+        <boxGeometry args={[9.5, 0.025, 0.06]} />
+        <meshStandardMaterial color="#d5c08c" roughness={0.75} metalness={0.04} />
       </mesh>
     </group>
   );

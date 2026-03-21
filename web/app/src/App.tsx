@@ -6,6 +6,7 @@ import { DiceCup } from './components/DiceCup';
 import { PhysicsDie } from './components/PhysicsDie';
 import { CupColliders, TrayColliders, TrayVisual } from './components/Tray';
 import { CUP_INTERIOR_POINTS, CUP_POSITION, INITIAL_DICE } from './constants/dice';
+import { ACTIVE_SETTLE_POSITIONS, KEEP_ZONE_SPACING, KEEP_ZONE_START_X, KEEP_ZONE_Y, KEEP_ZONE_Z } from './constants/layout';
 import type { DieSeed, FaceValue, RollPhase } from './types/dice';
 
 export default function App() {
@@ -36,7 +37,8 @@ export default function App() {
 
       const reflowedSelected = selected.map((die, index) => ({
         ...die,
-        position: [-3.3 + index * 1.1, 0.88, -4.45] as [number, number, number],
+        position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
+        placementKey: `selected-${die.id}-${index}`,
       }));
 
       const reflowedUnselected = unselected.map((die, index) => {
@@ -57,16 +59,18 @@ export default function App() {
   };
 
   /**
-   * Der Referenz-Wurf wird als Choreografie behandelt:
-   * loading -> pouring -> settling.
-   * Ziel ist nicht maximale Chaos-Physik, sondern ein glaubwürdiger, lesbarer Dice Flow.
+   * Referenzorientierter Ablauf:
+   * 1. loading   -> Würfel werden ruhig im Becher gesammelt
+   * 2. pouring   -> kontrollierte Freigabe am Becherrand
+   * 3. settling  -> Würfel werden auf lesbarere Endlagen im Tray organisiert
    */
   const rollDice = () => {
     if (isRolling) return;
 
     setIsRolling(true);
     setRollPhase('loading');
-    setRollCount((count) => count + 1);
+    const nextRoll = rollCount + 1;
+    setRollCount(nextRoll);
 
     setDice((current) =>
       current.map((die, index) => {
@@ -79,7 +83,7 @@ export default function App() {
             CUP_POSITION[1] - 1.24 + point[1],
             CUP_POSITION[2] + point[2],
           ] as [number, number, number],
-          placementKey: `cup-load-roll-${rollCount + 1}-${die.id}-${index}`,
+          placementKey: `cup-load-roll-${nextRoll}-${die.id}-${index}`,
         };
       })
     );
@@ -96,7 +100,7 @@ export default function App() {
               CUP_POSITION[1] - 1.06 + (index % 2) * 0.03,
               CUP_POSITION[2] - 2.55 + ((index % 3) - 1) * 0.06,
             ] as [number, number, number],
-            placementKey: `cup-pour-${rollCount + 1}-${die.id}-${index}`,
+            placementKey: `cup-pour-${nextRoll}-${die.id}-${index}`,
           };
         })
       );
@@ -104,6 +108,24 @@ export default function App() {
 
     setTimeout(() => {
       setRollPhase('settling');
+      setDice((current) => {
+        const selected = current.filter((die) => die.selected).sort((a, b) => a.id - b.id);
+        const unselected = current.filter((die) => !die.selected).sort((a, b) => a.id - b.id);
+
+        const kept = selected.map((die, index) => ({
+          ...die,
+          position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
+          placementKey: `settled-selected-${nextRoll}-${die.id}-${index}`,
+        }));
+
+        const active = unselected.map((die, index) => ({
+          ...die,
+          position: ACTIVE_SETTLE_POSITIONS[index % ACTIVE_SETTLE_POSITIONS.length],
+          placementKey: `settled-active-${nextRoll}-${die.id}-${index}`,
+        }));
+
+        return [...kept, ...active].sort((a, b) => a.id - b.id);
+      });
     }, 1500);
 
     setTimeout(() => {
@@ -135,7 +157,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1I: stärker choreografierter Referenz-Wurf mit kontrollierter Freigabe aus dem Becher.</p>
+          <p>Arbeitsblock 2A: klarere Keep-Zone und lesbarere Würfel-Endlagen im Tray.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -150,7 +172,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Spike-Fokus:</strong> aktive Würfel kontrolliert im Becher sammeln, sichtbar ausgießen und mit lesbaren Endlagen im Tray landen lassen.
+        <strong>Spike-Fokus:</strong> aktive Würfel kontrolliert im Becher sammeln, sichtbar ausgießen und mit klarer Keep-Zone sowie lesbaren Endlagen im Tray landen lassen.
       </div>
 
       <div className="value-panel">

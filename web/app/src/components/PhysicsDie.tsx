@@ -50,6 +50,13 @@ export function PhysicsDie({
         true
       );
     }
+
+    // Kept dice werden bewusst ruhig und sauber in die obere Ablage gesetzt.
+    if (die.selected && rollPhase === 'idle') {
+      body.setTranslation({ x: die.position[0], y: die.position[1], z: die.position[2] }, true);
+      body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    }
   }, [die.position, die.id, die.selected, die.placementKey, rollPhase]);
 
   useEffect(() => {

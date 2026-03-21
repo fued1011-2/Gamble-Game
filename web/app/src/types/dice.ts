@@ -8,3 +8,4 @@ export type DieSeed = {
 };
 
 export type RollPhase = 'idle' | 'loading' | 'pouring' | 'settling';
+export type DiceArea = 'active' | 'kept';
