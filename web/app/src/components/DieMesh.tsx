@@ -34,7 +34,7 @@ export function DieMesh({ selected }: { selected: boolean }) {
       {FACE_CONFIG.map((face) => (
         <group
           key={face.value}
-          position={[face.position[0] * 0.86, face.position[1] * 0.86, face.position[2] * 0.86]}
+          position={[face.position[0] * 0.72, face.position[1] * 0.72, face.position[2] * 0.72]}
           rotation={face.rotation}
         >
           <PipFace value={face.value} />
@@ -43,3 +43,4 @@ export function DieMesh({ selected }: { selected: boolean }) {
     </group>
   );
 }
+

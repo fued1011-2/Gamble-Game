@@ -1,4 +1,4 @@
-import { RigidBody, RapierRigidBody } from '@react-three/rapier';
+import { CuboidCollider, RigidBody, RapierRigidBody } from '@react-three/rapier';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { DieMesh } from './DieMesh';
@@ -88,7 +88,7 @@ export function PhysicsDie({
   return (
     <RigidBody
       ref={bodyRef}
-      colliders="cuboid"
+      colliders={false}
       restitution={0.28}
       friction={0.95}
       angularDamping={0.86}
@@ -96,6 +96,7 @@ export function PhysicsDie({
       canSleep={true}
       enabledRotations={[true, true, true]}
     >
+      <CuboidCollider args={[0.36, 0.36, 0.36]} restitution={0.28} friction={0.95} />
       <group onClick={() => !isRolling && onToggle(die.id)}>
         <DieMesh selected={die.selected} />
       </group>
