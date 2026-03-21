@@ -11,6 +11,7 @@
 - Rapier-Physik für Würfelwürfe integriert
 - becherbasierte Wurfsequenz ergänzt
 - Engineering-Richtlinien und Strukturregeln dokumentiert
+- `vercel.json` und Vercel-Setup-Dokumentation für automatische Preview-Deployments ergänzt
 
 ### Changed
 - Würfelgröße und Becher-Innenraum für bessere Stabilität angepasst
