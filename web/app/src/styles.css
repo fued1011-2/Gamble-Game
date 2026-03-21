@@ -1,0 +1,132 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #111;
+  background: #22382b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+canvas {
+  touch-action: none;
+}
+
+.app-shell {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: radial-gradient(circle at top, #4d6d4f 0%, #21352b 60%, #17261e 100%);
+}
+
+.hud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  color: #f5f1e7;
+  pointer-events: none;
+}
+
+.hud.top h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.hud.top p {
+  margin: 0.35rem 0 0;
+  opacity: 0.85;
+}
+
+.hud-box,
+.hint-panel {
+  background: rgba(242, 242, 228, 0.88);
+  color: #111;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px);
+}
+
+.hud-box {
+  min-width: 220px;
+  padding: 0.9rem 1rem;
+}
+
+.controls {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 0.9rem;
+}
+
+.controls button {
+  border: 1px solid #151515;
+  border-radius: 12px;
+  background: #f2f2e4;
+  color: #111;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.9rem 1.2rem;
+  min-width: 140px;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+}
+
+.controls button:hover {
+  transform: translateY(-1px);
+}
+
+.hint-panel {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 5.8rem;
+  z-index: 10;
+  max-width: 320px;
+  padding: 0.85rem 1rem;
+}
+
+@media (max-width: 800px) {
+  .hud {
+    flex-direction: column;
+  }
+
+  .hud-box,
+  .hint-panel {
+    max-width: 100%;
+  }
+
+  .hint-panel {
+    left: 1rem;
+    right: 1rem;
+    bottom: 6.8rem;
+  }
+
+  .controls {
+    width: calc(100% - 2rem);
+  }
+
+  .controls button {
+    flex: 1;
+    min-width: 0;
+  }
+}
