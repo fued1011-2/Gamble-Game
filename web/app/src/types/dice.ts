@@ -4,6 +4,7 @@ export type DieSeed = {
   id: number;
   position: [number, number, number];
   selected: boolean;
+  placementKey?: string;
 };
 
 export type RollPhase = 'idle' | 'loading' | 'pouring' | 'settling';

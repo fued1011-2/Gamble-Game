@@ -16,12 +16,12 @@ export const CUP_INTERIOR_POINTS: Array<[number, number, number]> = [
 ];
 
 export const INITIAL_DICE: DieSeed[] = [
-  { id: 1, position: [-3.75, 2.2, 0.35], selected: false },
-  { id: 2, position: [-2.25, 2.3, -0.25], selected: false },
-  { id: 3, position: [-0.75, 2.1, 0.1], selected: false },
-  { id: 4, position: [0.75, 2.35, -0.18], selected: false },
-  { id: 5, position: [2.25, 2.15, 0.24], selected: false },
-  { id: 6, position: [3.75, 2.28, -0.08], selected: false },
+  { id: 1, position: [-3.75, 2.2, 0.35], selected: false, placementKey: 'initial-1' },
+  { id: 2, position: [-2.25, 2.3, -0.25], selected: false, placementKey: 'initial-2' },
+  { id: 3, position: [-0.75, 2.1, 0.1], selected: false, placementKey: 'initial-3' },
+  { id: 4, position: [0.75, 2.35, -0.18], selected: false, placementKey: 'initial-4' },
+  { id: 5, position: [2.25, 2.15, 0.24], selected: false, placementKey: 'initial-5' },
+  { id: 6, position: [3.75, 2.28, -0.08], selected: false, placementKey: 'initial-6' },
 ];
 
 export const FACE_OFFSETS: Record<FaceValue, [number, number][]> = {

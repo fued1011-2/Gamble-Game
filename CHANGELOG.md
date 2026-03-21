@@ -22,3 +22,4 @@
 - Würfel verkleinert und Collider enger auf die neue Größe abgestimmt, um Verhakungen zu reduzieren
 - Wurfsequenz stärker in Richtung kontrollierter Referenz-Inszenierung getunt
 - Becherfreigabe weiter choreografiert und Kamera nochmals auf Referenz-Lesbarkeit abgestimmt
+- Teleport-Bug behoben, indem Würfel-Repositionierung nur noch bei echten Phasenwechseln erfolgt

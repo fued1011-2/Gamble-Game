@@ -19,10 +19,14 @@ export function PhysicsDie({
   rollPhase: RollPhase;
 }) {
   const bodyRef = useRef<RapierRigidBody | null>(null);
+  const lastPlacementKeyRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     const body = bodyRef.current;
     if (!body) return;
+    if (!die.placementKey || lastPlacementKeyRef.current === die.placementKey) return;
+
+    lastPlacementKeyRef.current = die.placementKey;
 
     body.setTranslation({ x: die.position[0], y: die.position[1], z: die.position[2] }, true);
     body.setLinvel({ x: 0, y: 0, z: 0 }, true);
@@ -46,7 +50,7 @@ export function PhysicsDie({
         true
       );
     }
-  }, [die.position, die.id, die.selected, rollPhase]);
+  }, [die.position, die.id, die.selected, die.placementKey, rollPhase]);
 
   useEffect(() => {
     let frame = 0;
@@ -89,10 +93,10 @@ export function PhysicsDie({
     <RigidBody
       ref={bodyRef}
       colliders={false}
-      restitution={0.16}
-      friction={1.05}
-      angularDamping={1.05}
-      linearDamping={0.88}
+      restitution={0.1}
+      friction={1.15}
+      angularDamping={1.28}
+      linearDamping={1.02}
       canSleep={true}
       enabledRotations={[true, true, true]}
     >

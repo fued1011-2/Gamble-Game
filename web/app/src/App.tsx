@@ -48,6 +48,7 @@ export default function App() {
             CUP_POSITION[1] - 1.24 + point[1],
             CUP_POSITION[2] + point[2],
           ] as [number, number, number],
+          placementKey: `cup-load-${die.id}-${index}`,
         };
       });
 
@@ -78,6 +79,7 @@ export default function App() {
             CUP_POSITION[1] - 1.24 + point[1],
             CUP_POSITION[2] + point[2],
           ] as [number, number, number],
+          placementKey: `cup-load-roll-${rollCount + 1}-${die.id}-${index}`,
         };
       })
     );
@@ -94,6 +96,7 @@ export default function App() {
               CUP_POSITION[1] - 1.06 + (index % 2) * 0.03,
               CUP_POSITION[2] - 2.55 + ((index % 3) - 1) * 0.06,
             ] as [number, number, number],
+            placementKey: `cup-pour-${rollCount + 1}-${die.id}-${index}`,
           };
         })
       );
