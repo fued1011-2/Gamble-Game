@@ -15,3 +15,5 @@
 ### Changed
 - Würfelgröße und Becher-Innenraum für bessere Stabilität angepasst
 - Renderer-Code wird in besser getrennte Module aufgeteilt
+- Kamera weiter herausgezogen und Zoom-Spielraum erweitert
+- Becherwurf auf sichtbareres Ausgießen und ruhigere Sammelphase umgestellt

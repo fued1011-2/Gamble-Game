@@ -90,14 +90,14 @@ export default function App() {
           return {
             ...die,
             position: [
-              CUP_POSITION[0] + (index - 2.5) * 0.14,
-              CUP_POSITION[1] - 0.05 + (index % 2) * 0.08,
-              CUP_POSITION[2] - 1.35 + ((index % 3) - 1) * 0.12,
+              CUP_POSITION[0] + (index - 2.5) * 0.12,
+              CUP_POSITION[1] - 0.58 + (index % 2) * 0.06,
+              CUP_POSITION[2] - 1.95 + ((index % 3) - 1) * 0.1,
             ] as [number, number, number],
           };
         })
       );
-    }, 520);
+    }, 760);
 
     setTimeout(() => {
       setRollPhase('idle');
@@ -181,3 +181,4 @@ export default function App() {
     </div>
   );
 }
+
