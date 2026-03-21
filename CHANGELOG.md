@@ -32,4 +32,4 @@
 - Auswahlfeedback verbessert: Hover-/Select-Highlight macht interaktive Würfel klarer erkennbar
 - Kamerakomposition näher an 51WWG ausgerichtet: steilere Vogelperspektive, Keep-Zone oben, Becher rechts vom Tray
 - Tischkomposition weiter korrigiert: Kamera weiter raus, Becher kleiner und Würfel auf glaubwürdigere Größe reduziert
-- Fernsicht lesbarer gemacht: Nebel stark zurückgenommen und Lichtkontrast für die neue Kameradistanz verbessert
+- Fernsicht lesbarer gemacht: Fog vollständig entfernt, damit Zoom-Out nicht wieder in matschige Distanz kippt

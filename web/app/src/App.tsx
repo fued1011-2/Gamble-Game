@@ -197,7 +197,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 3F: Tischkomposition korrigieren – Kamera weiter raus, Becher und Würfel kleiner.</p>
+          <p>Arbeitsblock 3H: Distanzsicht klar machen – Fog komplett raus, damit Zoom-Out nicht weichgekocht wird.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
