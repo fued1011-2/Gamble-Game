@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { CUP_POSITION } from '../constants/dice';
+import type { RollPhase } from '../types/dice';
 
-export function DiceCup({ isRolling }: { isRolling: boolean }) {
+export function DiceCup({ rollPhase }: { rollPhase: RollPhase }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
@@ -13,10 +14,13 @@ export function DiceCup({ isRolling }: { isRolling: boolean }) {
 
     const animate = () => {
       frame += 1;
-      if (isRolling) {
+      if (rollPhase === 'loading') {
         const t = frame / 60;
         group.position.set(CUP_POSITION[0], CUP_POSITION[1] + Math.sin(t * 14) * 0.12, CUP_POSITION[2]);
         group.rotation.set(-0.22 + Math.sin(t * 10) * 0.06, 0, Math.sin(t * 12) * 0.1);
+      } else if (rollPhase === 'pouring') {
+        group.position.set(CUP_POSITION[0] + 0.15, CUP_POSITION[1] - 0.05, CUP_POSITION[2] - 0.35);
+        group.rotation.set(-1.08, 0, 0.18);
       } else {
         group.position.set(...CUP_POSITION);
         group.rotation.set(-0.22, 0, 0);
@@ -26,7 +30,7 @@ export function DiceCup({ isRolling }: { isRolling: boolean }) {
 
     raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
-  }, [isRolling]);
+  }, [rollPhase]);
 
   return (
     <group ref={groupRef} position={CUP_POSITION} rotation={[-0.22, 0, 0]}>

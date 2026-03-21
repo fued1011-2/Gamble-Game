@@ -6,12 +6,13 @@ import { DiceCup } from './components/DiceCup';
 import { PhysicsDie } from './components/PhysicsDie';
 import { CupColliders, TrayColliders, TrayVisual } from './components/Tray';
 import { CUP_INTERIOR_POINTS, CUP_POSITION, INITIAL_DICE } from './constants/dice';
-import type { DieSeed, FaceValue } from './types/dice';
+import type { DieSeed, FaceValue, RollPhase } from './types/dice';
 
 export default function App() {
   const [dice, setDice] = useState<DieSeed[]>(INITIAL_DICE);
   const [rollCount, setRollCount] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
+  const [rollPhase, setRollPhase] = useState<RollPhase>('idle');
   const [detectedValues, setDetectedValues] = useState<Record<number, FaceValue>>({
     1: 1,
     2: 1,
@@ -25,10 +26,6 @@ export default function App() {
     setDetectedValues((current) => (current[id] === value ? current : { ...current, [id]: value }));
   };
 
-  /**
-   * Auswahl wird aktuell noch pragmatisch über Positionen gelöst.
-   * Das ist für den Spike okay, später sollte daraus eine klarere Game-/UI-State-Struktur werden.
-   */
   const toggleDie = (id: number) => {
     if (isRolling) return;
 
@@ -46,7 +43,11 @@ export default function App() {
         const point = CUP_INTERIOR_POINTS[index % CUP_INTERIOR_POINTS.length];
         return {
           ...die,
-          position: [CUP_POSITION[0] + point[0], CUP_POSITION[1] - 1.2 + point[1], CUP_POSITION[2] + point[2]] as [number, number, number],
+          position: [
+            CUP_POSITION[0] + point[0],
+            CUP_POSITION[1] - 1.2 + point[1],
+            CUP_POSITION[2] + point[2],
+          ] as [number, number, number],
         };
       });
 
@@ -55,13 +56,15 @@ export default function App() {
   };
 
   /**
-   * Der Wurf startet bewusst im Becherraum.
-   * So bekommt der Roll eine klare Quelle und wirkt weniger wie "Würfel fallen zufällig irgendwo runter".
+   * Zweistufiger Wurf:
+   * 1. loading → Würfel werden im Becher gesammelt
+   * 2. pouring → Würfel werden am Becherrand freigegeben und physisch in den Tray geschüttet
    */
   const rollDice = () => {
     if (isRolling) return;
 
     setIsRolling(true);
+    setRollPhase('loading');
     setRollCount((count) => count + 1);
 
     setDice((current) =>
@@ -70,18 +73,43 @@ export default function App() {
         const point = CUP_INTERIOR_POINTS[index % CUP_INTERIOR_POINTS.length];
         return {
           ...die,
-          position: [CUP_POSITION[0] + point[0], CUP_POSITION[1] - 1.2 + point[1], CUP_POSITION[2] + point[2]] as [number, number, number],
+          position: [
+            CUP_POSITION[0] + point[0],
+            CUP_POSITION[1] - 1.2 + point[1],
+            CUP_POSITION[2] + point[2],
+          ] as [number, number, number],
         };
       })
     );
 
-    setTimeout(() => setIsRolling(false), 1900);
+    setTimeout(() => {
+      setRollPhase('pouring');
+      setDice((current) =>
+        current.map((die, index) => {
+          if (die.selected) return die;
+          return {
+            ...die,
+            position: [
+              CUP_POSITION[0] + (index - 2.5) * 0.14,
+              CUP_POSITION[1] - 0.05 + (index % 2) * 0.08,
+              CUP_POSITION[2] - 1.35 + ((index % 3) - 1) * 0.12,
+            ] as [number, number, number],
+          };
+        })
+      );
+    }, 520);
+
+    setTimeout(() => {
+      setRollPhase('idle');
+      setIsRolling(false);
+    }, 1900);
   };
 
   const reset = () => {
     setDice(INITIAL_DICE);
     setRollCount(0);
     setIsRolling(false);
+    setRollPhase('idle');
     setDetectedValues({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
   };
 
@@ -100,7 +128,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1E: Becherwurf mit stabilerem Halteraum und ruhigerem Auswurf-Tuning.</p>
+          <p>Arbeitsblock 1F: Becherwurf mit sichtbarer Ausgieß-Bewegung und besserem Kamerarahmen.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -115,7 +143,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Spike-Fokus:</strong> aktive Würfel im Becher halten, aus dem Becher in den Tray schütten und die obere Seite aus der echten Endlage erkennen.
+        <strong>Spike-Fokus:</strong> aktive Würfel im Becher halten, sichtbar in den Tray ausgießen und die obere Seite aus der echten Endlage erkennen.
       </div>
 
       <div className="value-panel">
@@ -123,7 +151,7 @@ export default function App() {
         <div><strong>Detected Total:</strong> {activeDice.reduce((sum, die) => sum + die.topValue, 0)}</div>
       </div>
 
-      <Canvas shadows camera={{ position: [0, 8.4, 9.6], fov: 38 }}>
+      <Canvas shadows camera={{ position: [0, 10.2, 12.8], fov: 34 }}>
         <color attach="background" args={['#21382c']} />
         <fog attach="fog" args={['#21382c', 10, 24]} />
         <ambientLight intensity={1.18} />
@@ -131,7 +159,7 @@ export default function App() {
         <pointLight position={[-4.5, 7, -2.5]} intensity={13} color="#ffd9a0" />
         <pointLight position={[4.5, 5.5, 3.5]} intensity={7} color="#b8d7ff" />
 
-        <DiceCup isRolling={isRolling} />
+        <DiceCup rollPhase={rollPhase} />
         <Physics gravity={[0, -12, 0]}>
           <TrayColliders />
           <CupColliders />
@@ -142,12 +170,13 @@ export default function App() {
               onToggle={toggleDie}
               onValueChange={updateDetectedValue}
               isRolling={isRolling}
+              rollPhase={rollPhase}
             />
           ))}
         </Physics>
         <TrayVisual />
         <ContactShadows position={[0, 0.12, 0]} opacity={0.5} scale={20} blur={2.4} far={10} />
-        <OrbitControls enablePan={false} minPolarAngle={0.75} maxPolarAngle={1.25} minDistance={8.5} maxDistance={14} />
+        <OrbitControls enablePan={false} minPolarAngle={0.72} maxPolarAngle={1.22} minDistance={9.5} maxDistance={18} />
       </Canvas>
     </div>
   );

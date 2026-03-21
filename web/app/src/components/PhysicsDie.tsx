@@ -3,18 +3,20 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { DieMesh } from './DieMesh';
 import { getTopFaceFromQuaternion } from '../lib/diceMath';
-import type { DieSeed, FaceValue } from '../types/dice';
+import type { DieSeed, FaceValue, RollPhase } from '../types/dice';
 
 export function PhysicsDie({
   die,
   onToggle,
   onValueChange,
   isRolling,
+  rollPhase,
 }: {
   die: DieSeed;
   onToggle: (id: number) => void;
   onValueChange: (id: number, value: FaceValue) => void;
   isRolling: boolean;
+  rollPhase: RollPhase;
 }) {
   const bodyRef = useRef<RapierRigidBody | null>(null);
 
@@ -26,25 +28,25 @@ export function PhysicsDie({
     body.setLinvel({ x: 0, y: 0, z: 0 }, true);
     body.setAngvel({ x: 0, y: 0, z: 0 }, true);
 
-    if (!die.selected) {
+    if (!die.selected && rollPhase === 'pouring') {
       body.applyImpulse(
         {
-          x: (die.id - 3.5) * 0.24,
-          y: 1.1 + die.id * 0.05,
-          z: -3.2 - die.id * 0.12,
+          x: (die.id - 3.5) * 0.28,
+          y: 0.85 + die.id * 0.04,
+          z: -4.5 - die.id * 0.18,
         },
         true
       );
       body.applyTorqueImpulse(
         {
-          x: 1.45 + die.id * 0.28,
-          y: 1.05 + die.id * 0.18,
-          z: 1.1 + die.id * 0.18,
+          x: 1.6 + die.id * 0.24,
+          y: 0.95 + die.id * 0.14,
+          z: 1.25 + die.id * 0.16,
         },
         true
       );
     }
-  }, [die.position[0], die.position[1], die.position[2], die.id, die.selected]);
+  }, [die.position, die.id, die.selected, rollPhase]);
 
   useEffect(() => {
     let frame = 0;

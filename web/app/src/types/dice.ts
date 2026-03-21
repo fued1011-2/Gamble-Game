@@ -5,3 +5,5 @@ export type DieSeed = {
   position: [number, number, number];
   selected: boolean;
 };
+
+export type RollPhase = 'idle' | 'loading' | 'pouring';
