@@ -18,3 +18,4 @@
 - Kamera weiter herausgezogen und Zoom-Spielraum erweitert
 - Becherwurf auf sichtbareres Ausgießen und ruhigere Sammelphase umgestellt
 - Würfel verkleinert und Collider enger auf die neue Größe abgestimmt, um Verhakungen zu reduzieren
+- Wurfsequenz stärker in Richtung kontrollierter Referenz-Inszenierung getunt

@@ -90,14 +90,14 @@ export default function App() {
           return {
             ...die,
             position: [
-              CUP_POSITION[0] + (index - 2.5) * 0.12,
-              CUP_POSITION[1] - 0.58 + (index % 2) * 0.06,
-              CUP_POSITION[2] - 1.95 + ((index % 3) - 1) * 0.1,
+              CUP_POSITION[0] + (index - 2.5) * 0.08,
+              CUP_POSITION[1] - 0.82 + (index % 2) * 0.04,
+              CUP_POSITION[2] - 2.28 + ((index % 3) - 1) * 0.08,
             ] as [number, number, number],
           };
         })
       );
-    }, 760);
+    }, 900);
 
     setTimeout(() => {
       setRollPhase('idle');
@@ -128,7 +128,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1F: Becherwurf mit sichtbarer Ausgieß-Bewegung und besserem Kamerarahmen.</p>
+          <p>Arbeitsblock 1H: kontrollierterer Referenz-Wurf mit weniger Chaos und lesbareren Endlagen.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6

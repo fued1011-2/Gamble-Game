@@ -4,11 +4,11 @@ import { CUP_POSITION } from '../constants/dice';
 export function TrayColliders() {
   return (
     <RigidBody type="fixed" colliders={false}>
-      <CuboidCollider args={[5.6, 0.11, 5.6]} position={[0, 0, 0]} restitution={0.15} friction={0.9} />
-      <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, -5.25]} restitution={0.2} friction={0.8} />
-      <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, 5.25]} restitution={0.2} friction={0.8} />
-      <CuboidCollider args={[0.225, 0.675, 5.45]} position={[-5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
-      <CuboidCollider args={[0.225, 0.675, 5.45]} position={[5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
+      <CuboidCollider args={[5.6, 0.11, 5.6]} position={[0, 0, 0]} restitution={0.08} friction={1.0} />
+      <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, -5.25]} restitution={0.08} friction={0.95} />
+      <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, 5.25]} restitution={0.08} friction={0.95} />
+      <CuboidCollider args={[0.225, 0.675, 5.45]} position={[-5.25, 0.72, 0]} restitution={0.08} friction={0.95} />
+      <CuboidCollider args={[0.225, 0.675, 5.45]} position={[5.25, 0.72, 0]} restitution={0.08} friction={0.95} />
     </RigidBody>
   );
 }

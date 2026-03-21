@@ -89,10 +89,10 @@ export function PhysicsDie({
     <RigidBody
       ref={bodyRef}
       colliders={false}
-      restitution={0.28}
-      friction={0.95}
-      angularDamping={0.86}
-      linearDamping={0.62}
+      restitution={0.16}
+      friction={1.05}
+      angularDamping={1.05}
+      linearDamping={0.88}
       canSleep={true}
       enabledRotations={[true, true, true]}
     >
