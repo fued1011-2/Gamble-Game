@@ -245,7 +245,7 @@ export default function App() {
           ))}
         </Physics>
         <TrayVisual />
-        <ContactShadows position={[0, 0.12, 0]} opacity={0.44} scale={21} blur={2.8} far={10} />
+        <ContactShadows position={[0, 0.12, 0]} opacity={0.36} scale={21} blur={3.1} far={10} />
         <OrbitControls enablePan={false} target={[0, 0.7, -0.55]} minPolarAngle={0.3} maxPolarAngle={0.5} minDistance={16} maxDistance={24} />
       </Canvas>
     </div>
