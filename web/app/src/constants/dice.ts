@@ -1,15 +1,18 @@
 import * as THREE from 'three';
 import type { DieSeed, FaceValue } from '../types/dice';
 
-export const CUP_POSITION: [number, number, number] = [0, 4.6, 6.4];
+export const CUP_POSITION: [number, number, number] = [0, 4.8, 6.8];
 
+/**
+ * Gestaffelte Innenpunkte, damit die Würfel im Becher nicht direkt kollidierend ineinander spawnen.
+ */
 export const CUP_INTERIOR_POINTS: Array<[number, number, number]> = [
-  [-0.42, 0.5, -0.18],
-  [0.42, 0.64, -0.08],
-  [-0.18, 1.02, 0.16],
-  [0.18, 1.18, -0.24],
-  [-0.36, 1.48, 0.18],
-  [0.36, 1.62, 0.05],
+  [-0.36, 0.35, -0.12],
+  [0.36, 0.52, -0.02],
+  [-0.16, 0.92, 0.1],
+  [0.16, 1.1, -0.16],
+  [-0.3, 1.42, 0.14],
+  [0.3, 1.58, 0.04],
 ];
 
 export const INITIAL_DICE: DieSeed[] = [

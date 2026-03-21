@@ -19,12 +19,11 @@ export function TrayColliders() {
 export function CupColliders() {
   return (
     <RigidBody type="fixed" colliders={false} position={CUP_POSITION} rotation={[-0.22, 0, 0]}>
-      <CylinderCollider args={[1.45, 1.28]} position={[0, 0, 0]} />
-      <CuboidCollider args={[1.3, 0.08, 1.3]} position={[0, -1.45, 0]} friction={0.95} restitution={0.15} />
-      <CuboidCollider args={[0.08, 1.3, 1.2]} position={[1.24, 0, 0]} friction={0.9} restitution={0.12} />
-      <CuboidCollider args={[0.08, 1.3, 1.2]} position={[-1.24, 0, 0]} friction={0.9} restitution={0.12} />
-      <CuboidCollider args={[1.2, 1.3, 0.08]} position={[0, 0, 1.24]} friction={0.9} restitution={0.12} />
-      <CuboidCollider args={[1.2, 1.3, 0.08]} position={[0, 0, -1.24]} friction={0.9} restitution={0.12} />
+      <CuboidCollider args={[1.45, 0.1, 1.45]} position={[0, -1.65, 0]} friction={0.98} restitution={0.08} />
+      <CuboidCollider args={[0.1, 1.45, 1.35]} position={[1.42, -0.02, 0]} friction={0.92} restitution={0.08} />
+      <CuboidCollider args={[0.1, 1.45, 1.35]} position={[-1.42, -0.02, 0]} friction={0.92} restitution={0.08} />
+      <CuboidCollider args={[1.35, 1.45, 0.1]} position={[0, -0.02, 1.42]} friction={0.92} restitution={0.08} />
+      <CuboidCollider args={[1.35, 1.45, 0.1]} position={[0, -0.02, -1.42]} friction={0.92} restitution={0.08} />
     </RigidBody>
   );
 }

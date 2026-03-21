@@ -100,7 +100,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1D: Becher-basierter Wurf mit echter Physik und besserem Halteraum.</p>
+          <p>Arbeitsblock 1E: Becherwurf mit stabilerem Halteraum und ruhigerem Auswurf-Tuning.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6

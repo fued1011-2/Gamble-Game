@@ -29,17 +29,17 @@ export function PhysicsDie({
     if (!die.selected) {
       body.applyImpulse(
         {
-          x: (die.id - 3.5) * 0.33,
-          y: 1.4 + die.id * 0.06,
-          z: -4.2 - die.id * 0.15,
+          x: (die.id - 3.5) * 0.24,
+          y: 1.1 + die.id * 0.05,
+          z: -3.2 - die.id * 0.12,
         },
         true
       );
       body.applyTorqueImpulse(
         {
-          x: 2 + die.id * 0.35,
-          y: 1.3 + die.id * 0.26,
-          z: 1.6 + die.id * 0.24,
+          x: 1.45 + die.id * 0.28,
+          y: 1.05 + die.id * 0.18,
+          z: 1.1 + die.id * 0.18,
         },
         true
       );
@@ -58,7 +58,13 @@ export function PhysicsDie({
 
       const ang = body.angvel();
       const lin = body.linvel();
-      const motion = Math.abs(ang.x) + Math.abs(ang.y) + Math.abs(ang.z) + Math.abs(lin.x) + Math.abs(lin.y) + Math.abs(lin.z);
+      const motion =
+        Math.abs(ang.x) +
+        Math.abs(ang.y) +
+        Math.abs(ang.z) +
+        Math.abs(lin.x) +
+        Math.abs(lin.y) +
+        Math.abs(lin.z);
 
       if (motion < 0.08) stoppedFrames += 1;
       else stoppedFrames = 0;
@@ -83,8 +89,8 @@ export function PhysicsDie({
       colliders="cuboid"
       restitution={0.28}
       friction={0.95}
-      angularDamping={0.68}
-      linearDamping={0.5}
+      angularDamping={0.86}
+      linearDamping={0.62}
       canSleep={true}
       enabledRotations={[true, true, true]}
     >
