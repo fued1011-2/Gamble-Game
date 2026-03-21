@@ -23,6 +23,7 @@ export default function App() {
   const [settledIds, setSettledIds] = useState<number[]>([]);
   const settleStartedAtRef = useRef<number | null>(null);
   const finalizeTimeoutRef = useRef<number | null>(null);
+  const forcedSettleTimeoutRef = useRef<number | null>(null);
   const settlingTriggeredRef = useRef(false);
   const [detectedValues, setDetectedValues] = useState<Record<number, FaceValue>>({
     1: 1,
@@ -72,6 +73,49 @@ export default function App() {
     });
   };
 
+  const clearTimers = () => {
+    if (finalizeTimeoutRef.current !== null) {
+      window.clearTimeout(finalizeTimeoutRef.current);
+      finalizeTimeoutRef.current = null;
+    }
+    if (forcedSettleTimeoutRef.current !== null) {
+      window.clearTimeout(forcedSettleTimeoutRef.current);
+      forcedSettleTimeoutRef.current = null;
+    }
+  };
+
+  const finalizeRoll = (nextRoll: number) => {
+    if (settlingTriggeredRef.current) return;
+    settlingTriggeredRef.current = true;
+    clearTimers();
+
+    setRollPhase('settling');
+    setDice((current) => {
+      const selected = current.filter((die) => die.selected).sort((a, b) => a.id - b.id);
+      const unselected = current.filter((die) => !die.selected).sort((a, b) => a.id - b.id);
+
+      const kept = selected.map((die, index) => ({
+        ...die,
+        position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
+        placementKey: `settled-selected-${nextRoll}-${die.id}-${index}`,
+      }));
+
+      const active = unselected.map((die, index) => ({
+        ...die,
+        position: ACTIVE_SETTLE_POSITIONS[index % ACTIVE_SETTLE_POSITIONS.length],
+        placementKey: `settled-active-${nextRoll}-${die.id}-${index}`,
+      }));
+
+      return [...kept, ...active].sort((a, b) => a.id - b.id);
+    });
+
+    finalizeTimeoutRef.current = window.setTimeout(() => {
+      setRollPhase('idle');
+      setIsRolling(false);
+      finalizeTimeoutRef.current = null;
+    }, 900);
+  };
+
   const rollDice = () => {
     if (isRolling) return;
 
@@ -81,6 +125,8 @@ export default function App() {
     setRollPhase('loading');
     setSettledIds([]);
     settleStartedAtRef.current = null;
+    settlingTriggeredRef.current = false;
+    clearTimers();
 
     setDice((current) =>
       current.map((die, index) => {
@@ -98,7 +144,7 @@ export default function App() {
       })
     );
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       settleStartedAtRef.current = Date.now();
       setRollPhase('pouring');
       setDice((current) =>
@@ -115,56 +161,37 @@ export default function App() {
           };
         })
       );
+
+      forcedSettleTimeoutRef.current = window.setTimeout(() => {
+        finalizeRoll(nextRoll);
+      }, 4200);
     }, 760);
   };
 
   useEffect(() => {
     if (rollPhase !== 'pouring') return;
+    if (settlingTriggeredRef.current) return;
 
     const activeIds = dice.filter((die) => !die.selected).map((die) => die.id);
     if (activeIds.length === 0) return;
 
     const allSettled = activeIds.every((id) => settledIds.includes(id));
     const minDelayReached =
-      settleStartedAtRef.current !== null && Date.now() - settleStartedAtRef.current > 1200;
+      settleStartedAtRef.current !== null && Date.now() - settleStartedAtRef.current > 1700;
 
     if (!allSettled || !minDelayReached) return;
-
-    setRollPhase('settling');
-    setDice((current) => {
-      const selected = current.filter((die) => die.selected).sort((a, b) => a.id - b.id);
-      const unselected = current.filter((die) => !die.selected).sort((a, b) => a.id - b.id);
-
-      const kept = selected.map((die, index) => ({
-        ...die,
-        position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
-        placementKey: `settled-selected-${rollCount}-${die.id}-${index}`,
-      }));
-
-      const active = unselected.map((die, index) => ({
-        ...die,
-        position: ACTIVE_SETTLE_POSITIONS[index % ACTIVE_SETTLE_POSITIONS.length],
-        placementKey: `settled-active-${rollCount}-${die.id}-${index}`,
-      }));
-
-      return [...kept, ...active].sort((a, b) => a.id - b.id);
-    });
-
-    const timer = setTimeout(() => {
-      setRollPhase('idle');
-      setIsRolling(false);
-    }, 650);
-
-    return () => clearTimeout(timer);
+    finalizeRoll(rollCount);
   }, [rollPhase, settledIds, dice, rollCount]);
 
   const reset = () => {
+    clearTimers();
     setDice(INITIAL_DICE);
     setRollCount(0);
     setIsRolling(false);
     setRollPhase('idle');
     setSettledIds([]);
     settleStartedAtRef.current = null;
+    settlingTriggeredRef.current = false;
     setDetectedValues({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
   };
 
@@ -183,7 +210,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 2A: klarere Keep-Zone und lesbarere Würfel-Endlagen im Tray.</p>
+          <p>Arbeitsblock 2B: längere Ruhephase nach dem Wurf und stabilerer Übergang zurück auf idle.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
