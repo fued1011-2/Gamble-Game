@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { ContactShadows, OrbitControls, RoundedBox } from '@react-three/drei';
-import { CuboidCollider, Physics, RigidBody, RapierRigidBody } from '@react-three/rapier';
+import { CuboidCollider, CylinderCollider, Physics, RigidBody, RapierRigidBody } from '@react-three/rapier';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 
@@ -12,7 +12,16 @@ type DieSeed = {
   selected: boolean;
 };
 
-const CUP_POSITION: [number, number, number] = [0, 4.4, 6.2];
+const CUP_POSITION: [number, number, number] = [0, 4.6, 6.4];
+const CUP_INTERIOR_POINTS: Array<[number, number, number]> = [
+  [-0.42, 0.5, -0.18],
+  [0.42, 0.64, -0.08],
+  [-0.18, 1.02, 0.16],
+  [0.18, 1.18, -0.24],
+  [-0.36, 1.48, 0.18],
+  [0.36, 1.62, 0.05],
+];
+
 const INITIAL_DICE: DieSeed[] = [
   { id: 1, position: [-3.75, 2.2, 0.35], selected: false },
   { id: 2, position: [-2.25, 2.3, -0.25], selected: false },
@@ -80,7 +89,7 @@ function DieMesh({ selected }: { selected: boolean }) {
 
   return (
     <group>
-      <RoundedBox args={[1, 1, 1]} radius={0.1} smoothness={5} castShadow receiveShadow>
+      <RoundedBox args={[0.86, 0.86, 0.86]} radius={0.09} smoothness={5} castShadow receiveShadow>
         <meshPhysicalMaterial
           color={bodyColor}
           roughness={0.42}
@@ -92,7 +101,7 @@ function DieMesh({ selected }: { selected: boolean }) {
         />
       </RoundedBox>
       {FACE_CONFIG.map((face) => (
-        <group key={face.value} position={face.position} rotation={face.rotation}>
+        <group key={face.value} position={[face.position[0] * 0.86, face.position[1] * 0.86, face.position[2] * 0.86]} rotation={face.rotation}>
           <PipFace value={face.value} />
         </group>
       ))}
@@ -113,11 +122,11 @@ function DiceCup({ isRolling }: { isRolling: boolean }) {
       frame += 1;
       if (isRolling) {
         const t = frame / 60;
-        group.position.set(CUP_POSITION[0], CUP_POSITION[1] + Math.sin(t * 14) * 0.18, CUP_POSITION[2]);
-        group.rotation.set(-0.18 + Math.sin(t * 10) * 0.08, 0, Math.sin(t * 12) * 0.12);
+        group.position.set(CUP_POSITION[0], CUP_POSITION[1] + Math.sin(t * 14) * 0.12, CUP_POSITION[2]);
+        group.rotation.set(-0.22 + Math.sin(t * 10) * 0.06, 0, Math.sin(t * 12) * 0.1);
       } else {
         group.position.set(...CUP_POSITION);
-        group.rotation.set(-0.18, 0, 0);
+        group.rotation.set(-0.22, 0, 0);
       }
       raf = requestAnimationFrame(animate);
     };
@@ -127,17 +136,17 @@ function DiceCup({ isRolling }: { isRolling: boolean }) {
   }, [isRolling]);
 
   return (
-    <group ref={groupRef} position={CUP_POSITION} rotation={[-0.18, 0, 0]}>
+    <group ref={groupRef} position={CUP_POSITION} rotation={[-0.22, 0, 0]}>
       <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[0.95, 1.2, 2.2, 28, 1, true]} />
+        <cylinderGeometry args={[1.35, 1.6, 3.1, 32, 1, true]} />
         <meshStandardMaterial color="#26211b" roughness={0.72} metalness={0.1} side={THREE.DoubleSide} />
       </mesh>
-      <mesh position={[0, -1.08, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.18, 1.18, 0.18, 28]} />
+      <mesh position={[0, -1.55, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[1.58, 1.58, 0.2, 32]} />
         <meshStandardMaterial color="#1b1713" roughness={0.85} metalness={0.06} />
       </mesh>
-      <mesh position={[0, 1.12, 0]} castShadow>
-        <torusGeometry args={[1.08, 0.08, 12, 28]} />
+      <mesh position={[0, 1.55, 0]} castShadow>
+        <torusGeometry args={[1.42, 0.08, 12, 32]} />
         <meshStandardMaterial color="#56473a" roughness={0.5} metalness={0.12} />
       </mesh>
     </group>
@@ -152,6 +161,19 @@ function TrayColliders() {
       <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, 5.25]} restitution={0.2} friction={0.8} />
       <CuboidCollider args={[0.225, 0.675, 5.45]} position={[-5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
       <CuboidCollider args={[0.225, 0.675, 5.45]} position={[5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
+    </RigidBody>
+  );
+}
+
+function CupColliders() {
+  return (
+    <RigidBody type="fixed" colliders={false} position={CUP_POSITION} rotation={[-0.22, 0, 0]}>
+      <CylinderCollider args={[1.45, 1.28]} position={[0, 0, 0]} />
+      <CuboidCollider args={[1.3, 0.08, 1.3]} position={[0, -1.45, 0]} friction={0.95} restitution={0.15} />
+      <CuboidCollider args={[0.08, 1.3, 1.2]} position={[1.24, 0, 0]} friction={0.9} restitution={0.12} />
+      <CuboidCollider args={[0.08, 1.3, 1.2]} position={[-1.24, 0, 0]} friction={0.9} restitution={0.12} />
+      <CuboidCollider args={[1.2, 1.3, 0.08]} position={[0, 0, 1.24]} friction={0.9} restitution={0.12} />
+      <CuboidCollider args={[1.2, 1.3, 0.08]} position={[0, 0, -1.24]} friction={0.9} restitution={0.12} />
     </RigidBody>
   );
 }
@@ -191,12 +213,7 @@ function TrayVisual() {
   );
 }
 
-function PhysicsDie({
-  die,
-  onToggle,
-  onValueChange,
-  isRolling,
-}: {
+function PhysicsDie({ die, onToggle, onValueChange, isRolling }: {
   die: DieSeed;
   onToggle: (id: number) => void;
   onValueChange: (id: number, value: FaceValue) => void;
@@ -215,17 +232,17 @@ function PhysicsDie({
     if (!die.selected) {
       body.applyImpulse(
         {
-          x: (die.id - 3.5) * 0.4,
-          y: 1.8 + die.id * 0.08,
-          z: -4.8 - die.id * 0.18,
+          x: (die.id - 3.5) * 0.33,
+          y: 1.4 + die.id * 0.06,
+          z: -4.2 - die.id * 0.15,
         },
         true
       );
       body.applyTorqueImpulse(
         {
-          x: 2.2 + die.id * 0.45,
-          y: 1.5 + die.id * 0.32,
-          z: 1.8 + die.id * 0.28,
+          x: 2 + die.id * 0.35,
+          y: 1.3 + die.id * 0.26,
+          z: 1.6 + die.id * 0.24,
         },
         true
       );
@@ -269,8 +286,8 @@ function PhysicsDie({
       colliders="cuboid"
       restitution={0.28}
       friction={0.95}
-      angularDamping={0.65}
-      linearDamping={0.45}
+      angularDamping={0.68}
+      linearDamping={0.5}
       canSleep={true}
       enabledRotations={[true, true, true]}
     >
@@ -300,13 +317,16 @@ export default function App() {
 
       const reflowedSelected = selected.map((die, index) => ({
         ...die,
-        position: [-3.6 + index * 1.45, 1.2, -4.45] as [number, number, number],
+        position: [-3.6 + index * 1.2, 1.0, -4.45] as [number, number, number],
       }));
 
-      const reflowedUnselected = unselected.map((die, index) => ({
-        ...die,
-        position: [CUP_POSITION[0] + (index - 2.5) * 0.18, CUP_POSITION[1] - 0.4 + (index % 2) * 0.12, CUP_POSITION[2] + ((index % 3) - 1) * 0.14] as [number, number, number],
-      }));
+      const reflowedUnselected = unselected.map((die, index) => {
+        const p = CUP_INTERIOR_POINTS[index % CUP_INTERIOR_POINTS.length];
+        return {
+          ...die,
+          position: [CUP_POSITION[0] + p[0], CUP_POSITION[1] - 1.2 + p[1], CUP_POSITION[2] + p[2]] as [number, number, number],
+        };
+      });
 
       return [...reflowedSelected, ...reflowedUnselected].sort((a, b) => a.id - b.id);
     });
@@ -318,18 +338,14 @@ export default function App() {
     setRollCount((count) => count + 1);
 
     setDice((current) =>
-      current.map((die, index) =>
-        die.selected
-          ? die
-          : {
-              ...die,
-              position: [
-                CUP_POSITION[0] + (index - 2.5) * 0.18,
-                CUP_POSITION[1] - 0.35 + (index % 2) * 0.16,
-                CUP_POSITION[2] + ((index % 3) - 1) * 0.14,
-              ],
-            }
-      )
+      current.map((die, index) => {
+        if (die.selected) return die;
+        const p = CUP_INTERIOR_POINTS[index % CUP_INTERIOR_POINTS.length];
+        return {
+          ...die,
+          position: [CUP_POSITION[0] + p[0], CUP_POSITION[1] - 1.2 + p[1], CUP_POSITION[2] + p[2]] as [number, number, number],
+        };
+      })
     );
 
     setTimeout(() => setIsRolling(false), 1900);
@@ -350,7 +366,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1D: Becher-basierter Wurf mit echter Physik und Top-Face-Erkennung.</p>
+          <p>Arbeitsblock 1D: Becher-basierter Wurf mit echter Physik und besserem Halteraum.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -365,7 +381,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Spike-Fokus:</strong> aktive Würfel in einen Becher sammeln, aus dem Becher in den Tray schütten und die obere Seite aus der echten Endlage erkennen.
+        <strong>Spike-Fokus:</strong> aktive Würfel im Becher halten, aus dem Becher in den Tray schütten und die obere Seite aus der echten Endlage erkennen.
       </div>
 
       <div className="value-panel">
@@ -384,6 +400,7 @@ export default function App() {
         <DiceCup isRolling={isRolling} />
         <Physics gravity={[0, -12, 0]}>
           <TrayColliders />
+          <CupColliders />
           {dice.map((die) => (
             <PhysicsDie key={`${die.id}-${rollCount}`} die={die} onToggle={toggleDie} onValueChange={updateDetectedValue} isRolling={isRolling} />
           ))}
