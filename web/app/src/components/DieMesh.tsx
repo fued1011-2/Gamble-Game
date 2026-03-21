@@ -27,12 +27,13 @@ export function DieMesh({
   const bodyColor = selected ? '#fff1a8' : hovered ? '#fff7e8' : '#f7f1df';
   const ringOpacity = selected ? 0.95 : hovered ? 0.38 : 0;
   const ringColor = selected ? '#ffd24a' : '#f1e0a2';
+  const baseScale = hovered && interactive ? 0.9 : 0.865;
 
   return (
-    <group scale={hovered && interactive ? 1.04 : 1}>
+    <group scale={baseScale}>
       {(selected || hovered) && (
-        <mesh position={[0, -0.49, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-          <ringGeometry args={[0.44, 0.64, 40]} />
+        <mesh position={[0, -0.46, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <ringGeometry args={[0.4, 0.58, 40]} />
           <meshStandardMaterial
             color={ringColor}
             emissive={selected ? '#b88a12' : '#6f6130'}

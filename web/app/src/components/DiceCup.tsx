@@ -36,7 +36,7 @@ export function DiceCup({ rollPhase }: { rollPhase: RollPhase }) {
   }, [rollPhase]);
 
   return (
-    <group ref={groupRef} position={CUP_POSITION} rotation={[-0.24, 0, -0.12]}>
+    <group ref={groupRef} position={CUP_POSITION} rotation={[-0.24, 0, -0.12]} scale={0.78}>
       <mesh castShadow receiveShadow>
         <cylinderGeometry args={[1.9, 2.2, 4.1, 32, 1, true]} />
         <meshStandardMaterial color="#26211b" roughness={0.72} metalness={0.1} side={THREE.DoubleSide} />

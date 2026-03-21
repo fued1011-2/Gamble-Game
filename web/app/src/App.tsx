@@ -197,7 +197,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 3E: Kamera auf vogelperspektivische 51WWG-Lesart umbauen, Keep-Zone oben und Becher rechts.</p>
+          <p>Arbeitsblock 3F: Tischkomposition korrigieren – Kamera weiter raus, Becher und Würfel kleiner.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -212,7 +212,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Aktueller Fokus:</strong> Szene stärker wie 51 Worldwide Games lesen lassen: Blick von oben, Keep-Zone oben und Becher klar rechts neben dem Tray.
+        <strong>Aktueller Fokus:</strong> Kamera weiter zurücknehmen und Becher/Würfel auf eine glaubwürdigere Tischskala bringen.
       </div>
 
       <div className="value-panel">
@@ -220,7 +220,7 @@ export default function App() {
         <div><strong>Detected Total:</strong> {activeDice.reduce((sum, die) => sum + die.topValue, 0)}</div>
       </div>
 
-      <Canvas shadows camera={{ position: [0, 15.8, 6.1], fov: 24 }}>
+      <Canvas shadows camera={{ position: [0, 20.6, 8.8], fov: 22 }}>
         <color attach="background" args={['#21382c']} />
         <fog attach="fog" args={['#21382c', 10, 24]} />
         <ambientLight intensity={1.18} />
@@ -245,8 +245,8 @@ export default function App() {
           ))}
         </Physics>
         <TrayVisual />
-        <ContactShadows position={[0, 0.12, 0]} opacity={0.48} scale={20} blur={2.6} far={10} />
-        <OrbitControls enablePan={false} target={[0, 0.8, -0.45]} minPolarAngle={0.34} maxPolarAngle={0.58} minDistance={12.5} maxDistance={18} />
+        <ContactShadows position={[0, 0.12, 0]} opacity={0.44} scale={21} blur={2.8} far={10} />
+        <OrbitControls enablePan={false} target={[0, 0.7, -0.55]} minPolarAngle={0.3} maxPolarAngle={0.5} minDistance={16} maxDistance={24} />
       </Canvas>
     </div>
   );
