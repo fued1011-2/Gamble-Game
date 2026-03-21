@@ -8,10 +8,7 @@ import { CupColliders, TrayColliders, TrayVisual } from './components/Tray';
 import { CUP_INTERIOR_POINTS, CUP_POSITION, INITIAL_DICE } from './constants/dice';
 import {
   ACTIVE_SETTLE_POSITIONS,
-  KEEP_ZONE_SPACING,
-  KEEP_ZONE_START_X,
-  KEEP_ZONE_Y,
-  KEEP_ZONE_Z,
+  KEEP_SETTLE_POSITIONS,
 } from './constants/layout';
 import type { DieSeed, FaceValue, RollPhase } from './types/dice';
 
@@ -42,6 +39,17 @@ export default function App() {
     setSettledIds((current) => (current.includes(id) ? current : [...current, id]));
   };
 
+  const clearTimers = () => {
+    if (finalizeTimeoutRef.current !== null) {
+      window.clearTimeout(finalizeTimeoutRef.current);
+      finalizeTimeoutRef.current = null;
+    }
+    if (forcedSettleTimeoutRef.current !== null) {
+      window.clearTimeout(forcedSettleTimeoutRef.current);
+      forcedSettleTimeoutRef.current = null;
+    }
+  };
+
   const toggleDie = (id: number) => {
     if (isRolling) return;
 
@@ -52,36 +60,18 @@ export default function App() {
 
       const reflowedSelected = selected.map((die, index) => ({
         ...die,
-        position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
-        placementKey: `selected-${die.id}-${index}`,
+        position: KEEP_SETTLE_POSITIONS[index % KEEP_SETTLE_POSITIONS.length],
+        placementKey: `selected-${rollCount}-${die.id}-${index}`,
       }));
 
-      const reflowedUnselected = unselected.map((die, index) => {
-        const point = CUP_INTERIOR_POINTS[index % CUP_INTERIOR_POINTS.length];
-        return {
-          ...die,
-          position: [
-            CUP_POSITION[0] + point[0],
-            CUP_POSITION[1] - 1.24 + point[1],
-            CUP_POSITION[2] + point[2],
-          ] as [number, number, number],
-          placementKey: `cup-load-${die.id}-${index}`,
-        };
-      });
+      const reflowedUnselected = unselected.map((die, index) => ({
+        ...die,
+        position: ACTIVE_SETTLE_POSITIONS[index % ACTIVE_SETTLE_POSITIONS.length],
+        placementKey: `active-select-${rollCount}-${die.id}-${index}`,
+      }));
 
       return [...reflowedSelected, ...reflowedUnselected].sort((a, b) => a.id - b.id);
     });
-  };
-
-  const clearTimers = () => {
-    if (finalizeTimeoutRef.current !== null) {
-      window.clearTimeout(finalizeTimeoutRef.current);
-      finalizeTimeoutRef.current = null;
-    }
-    if (forcedSettleTimeoutRef.current !== null) {
-      window.clearTimeout(forcedSettleTimeoutRef.current);
-      forcedSettleTimeoutRef.current = null;
-    }
   };
 
   const finalizeRoll = (nextRoll: number) => {
@@ -96,7 +86,7 @@ export default function App() {
 
       const kept = selected.map((die, index) => ({
         ...die,
-        position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
+        position: KEEP_SETTLE_POSITIONS[index % KEEP_SETTLE_POSITIONS.length],
         placementKey: `settled-selected-${nextRoll}-${die.id}-${index}`,
       }));
 
@@ -210,7 +200,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 3A: Auswahl-/Keep-Flow verbessert, aktive Würfel bleiben im Tray statt in den Becher zurückzuspringen.</p>
+          <p>Arbeitsblock 3C: Keep-Zone ruhiger ordnen und Reflow für Auswahl klarer machen.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -225,7 +215,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Aktueller Fokus:</strong> zurückgelegte Würfel klar oben sammeln, aktive Würfel unten lesbar im Tray halten und den Auswahlfluss näher an echtes Spielverhalten bringen.
+        <strong>Aktueller Fokus:</strong> Keep-Zone ruhiger und ordentlicher wirken lassen, während aktive Würfel im Tray stabil und lesbar bleiben.
       </div>
 
       <div className="value-panel">

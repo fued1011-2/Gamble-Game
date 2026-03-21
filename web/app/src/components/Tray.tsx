@@ -64,6 +64,16 @@ export function TrayVisual() {
         <boxGeometry args={[9.5, 0.025, 0.06]} />
         <meshStandardMaterial color="#d5c08c" roughness={0.75} metalness={0.04} />
       </mesh>
+      {[-3, -1.8, -0.6, 0.6, 1.8, 3].map((x) => (
+        <mesh key={x} receiveShadow position={[x, 0.475, -4.45]}>
+          <boxGeometry args={[0.05, 0.03, 0.95]} />
+          <meshStandardMaterial color="#d8c88e" roughness={0.78} metalness={0.04} />
+        </mesh>
+      ))}
+      <mesh receiveShadow position={[0, 0.478, -5.02]}>
+        <boxGeometry args={[9.1, 0.018, 0.04]} />
+        <meshStandardMaterial color="#6e8f5d" roughness={0.9} metalness={0.02} />
+      </mesh>
     </group>
   );
 }
