@@ -25,3 +25,4 @@
 - Teleport-Bug behoben, indem Würfel-Repositionierung nur noch bei echten Phasenwechseln erfolgt
 - Keep-Zone visuell klarer markiert und Würfel-Endlagen lesbarer organisiert
 - Würfel werden jetzt erst nach echter Ruhephase statt zu frühem Fix-Timer ausgerichtet
+- Ruhephase nach dem Wurf verlängert und Hänger im Rolling-Zustand behoben

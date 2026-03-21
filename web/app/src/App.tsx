@@ -22,6 +22,8 @@ export default function App() {
   const [rollPhase, setRollPhase] = useState<RollPhase>('idle');
   const [settledIds, setSettledIds] = useState<number[]>([]);
   const settleStartedAtRef = useRef<number | null>(null);
+  const finalizeTimeoutRef = useRef<number | null>(null);
+  const settlingTriggeredRef = useRef(false);
   const [detectedValues, setDetectedValues] = useState<Record<number, FaceValue>>({
     1: 1,
     2: 1,
