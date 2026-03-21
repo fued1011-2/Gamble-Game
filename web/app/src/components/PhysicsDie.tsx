@@ -9,12 +9,14 @@ export function PhysicsDie({
   die,
   onToggle,
   onValueChange,
+  onSettled,
   isRolling,
   rollPhase,
 }: {
   die: DieSeed;
   onToggle: (id: number) => void;
   onValueChange: (id: number, value: FaceValue) => void;
+  onSettled: (id: number) => void;
   isRolling: boolean;
   rollPhase: RollPhase;
 }) {
@@ -50,13 +52,6 @@ export function PhysicsDie({
         true
       );
     }
-
-    // Kept dice werden bewusst ruhig und sauber in die obere Ablage gesetzt.
-    if (die.selected && rollPhase === 'idle') {
-      body.setTranslation({ x: die.position[0], y: die.position[1], z: die.position[2] }, true);
-      body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-      body.setAngvel({ x: 0, y: 0, z: 0 }, true);
-    }
   }, [die.position, die.id, die.selected, die.placementKey, rollPhase]);
 
   useEffect(() => {
@@ -86,6 +81,9 @@ export function PhysicsDie({
         const rot = body.rotation();
         const quat = new THREE.Quaternion(rot.x, rot.y, rot.z, rot.w);
         onValueChange(die.id, getTopFaceFromQuaternion(quat));
+        if (!die.selected && rollPhase === 'pouring') {
+          onSettled(die.id);
+        }
         return;
       }
 
@@ -94,7 +92,7 @@ export function PhysicsDie({
 
     raf = requestAnimationFrame(poll);
     return () => cancelAnimationFrame(raf);
-  }, [die.id, die.position, onValueChange, isRolling]);
+  }, [die.id, die.position, onValueChange, onSettled, isRolling, die.selected, rollPhase]);
 
   return (
     <RigidBody

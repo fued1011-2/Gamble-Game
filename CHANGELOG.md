@@ -24,3 +24,4 @@
 - Becherfreigabe weiter choreografiert und Kamera nochmals auf Referenz-Lesbarkeit abgestimmt
 - Teleport-Bug behoben, indem Würfel-Repositionierung nur noch bei echten Phasenwechseln erfolgt
 - Keep-Zone visuell klarer markiert und Würfel-Endlagen lesbarer organisiert
+- Würfel werden jetzt erst nach echter Ruhephase statt zu frühem Fix-Timer ausgerichtet

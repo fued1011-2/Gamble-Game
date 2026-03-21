@@ -1,12 +1,18 @@
 import { Canvas } from '@react-three/fiber';
 import { ContactShadows, OrbitControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DiceCup } from './components/DiceCup';
 import { PhysicsDie } from './components/PhysicsDie';
 import { CupColliders, TrayColliders, TrayVisual } from './components/Tray';
 import { CUP_INTERIOR_POINTS, CUP_POSITION, INITIAL_DICE } from './constants/dice';
-import { ACTIVE_SETTLE_POSITIONS, KEEP_ZONE_SPACING, KEEP_ZONE_START_X, KEEP_ZONE_Y, KEEP_ZONE_Z } from './constants/layout';
+import {
+  ACTIVE_SETTLE_POSITIONS,
+  KEEP_ZONE_SPACING,
+  KEEP_ZONE_START_X,
+  KEEP_ZONE_Y,
+  KEEP_ZONE_Z,
+} from './constants/layout';
 import type { DieSeed, FaceValue, RollPhase } from './types/dice';
 
 export default function App() {
@@ -14,6 +20,8 @@ export default function App() {
   const [rollCount, setRollCount] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
   const [rollPhase, setRollPhase] = useState<RollPhase>('idle');
+  const [settledIds, setSettledIds] = useState<number[]>([]);
+  const settleStartedAtRef = useRef<number | null>(null);
   const [detectedValues, setDetectedValues] = useState<Record<number, FaceValue>>({
     1: 1,
     2: 1,
@@ -25,6 +33,10 @@ export default function App() {
 
   const updateDetectedValue = (id: number, value: FaceValue) => {
     setDetectedValues((current) => (current[id] === value ? current : { ...current, [id]: value }));
+  };
+
+  const markDieSettled = (id: number) => {
+    setSettledIds((current) => (current.includes(id) ? current : [...current, id]));
   };
 
   const toggleDie = (id: number) => {
@@ -58,19 +70,15 @@ export default function App() {
     });
   };
 
-  /**
-   * Referenzorientierter Ablauf:
-   * 1. loading   -> Würfel werden ruhig im Becher gesammelt
-   * 2. pouring   -> kontrollierte Freigabe am Becherrand
-   * 3. settling  -> Würfel werden auf lesbarere Endlagen im Tray organisiert
-   */
   const rollDice = () => {
     if (isRolling) return;
 
-    setIsRolling(true);
-    setRollPhase('loading');
     const nextRoll = rollCount + 1;
     setRollCount(nextRoll);
+    setIsRolling(true);
+    setRollPhase('loading');
+    setSettledIds([]);
+    settleStartedAtRef.current = null;
 
     setDice((current) =>
       current.map((die, index) => {
@@ -89,6 +97,7 @@ export default function App() {
     );
 
     setTimeout(() => {
+      settleStartedAtRef.current = Date.now();
       setRollPhase('pouring');
       setDice((current) =>
         current.map((die, index) => {
@@ -105,40 +114,55 @@ export default function App() {
         })
       );
     }, 760);
+  };
 
-    setTimeout(() => {
-      setRollPhase('settling');
-      setDice((current) => {
-        const selected = current.filter((die) => die.selected).sort((a, b) => a.id - b.id);
-        const unselected = current.filter((die) => !die.selected).sort((a, b) => a.id - b.id);
+  useEffect(() => {
+    if (rollPhase !== 'pouring') return;
 
-        const kept = selected.map((die, index) => ({
-          ...die,
-          position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
-          placementKey: `settled-selected-${nextRoll}-${die.id}-${index}`,
-        }));
+    const activeIds = dice.filter((die) => !die.selected).map((die) => die.id);
+    if (activeIds.length === 0) return;
 
-        const active = unselected.map((die, index) => ({
-          ...die,
-          position: ACTIVE_SETTLE_POSITIONS[index % ACTIVE_SETTLE_POSITIONS.length],
-          placementKey: `settled-active-${nextRoll}-${die.id}-${index}`,
-        }));
+    const allSettled = activeIds.every((id) => settledIds.includes(id));
+    const minDelayReached =
+      settleStartedAtRef.current !== null && Date.now() - settleStartedAtRef.current > 1200;
 
-        return [...kept, ...active].sort((a, b) => a.id - b.id);
-      });
-    }, 1500);
+    if (!allSettled || !minDelayReached) return;
 
-    setTimeout(() => {
+    setRollPhase('settling');
+    setDice((current) => {
+      const selected = current.filter((die) => die.selected).sort((a, b) => a.id - b.id);
+      const unselected = current.filter((die) => !die.selected).sort((a, b) => a.id - b.id);
+
+      const kept = selected.map((die, index) => ({
+        ...die,
+        position: [KEEP_ZONE_START_X + index * KEEP_ZONE_SPACING, KEEP_ZONE_Y, KEEP_ZONE_Z] as [number, number, number],
+        placementKey: `settled-selected-${rollCount}-${die.id}-${index}`,
+      }));
+
+      const active = unselected.map((die, index) => ({
+        ...die,
+        position: ACTIVE_SETTLE_POSITIONS[index % ACTIVE_SETTLE_POSITIONS.length],
+        placementKey: `settled-active-${rollCount}-${die.id}-${index}`,
+      }));
+
+      return [...kept, ...active].sort((a, b) => a.id - b.id);
+    });
+
+    const timer = setTimeout(() => {
       setRollPhase('idle');
       setIsRolling(false);
-    }, 2650);
-  };
+    }, 650);
+
+    return () => clearTimeout(timer);
+  }, [rollPhase, settledIds, dice, rollCount]);
 
   const reset = () => {
     setDice(INITIAL_DICE);
     setRollCount(0);
     setIsRolling(false);
     setRollPhase('idle');
+    setSettledIds([]);
+    settleStartedAtRef.current = null;
     setDetectedValues({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
   };
 
@@ -198,6 +222,7 @@ export default function App() {
               die={die}
               onToggle={toggleDie}
               onValueChange={updateDetectedValue}
+              onSettled={markDieSettled}
               isRolling={isRolling}
               rollPhase={rollPhase}
             />
