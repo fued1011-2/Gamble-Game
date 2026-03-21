@@ -31,17 +31,17 @@ export function PhysicsDie({
     if (!die.selected && rollPhase === 'pouring') {
       body.applyImpulse(
         {
-          x: (die.id - 3.5) * 0.18,
-          y: 0.55 + die.id * 0.03,
-          z: -3.7 - die.id * 0.14,
+          x: (die.id - 3.5) * 0.08,
+          y: 0.32 + die.id * 0.02,
+          z: -2.1 - die.id * 0.08,
         },
         true
       );
       body.applyTorqueImpulse(
         {
-          x: 1.05 + die.id * 0.18,
-          y: 0.75 + die.id * 0.1,
-          z: 0.9 + die.id * 0.12,
+          x: 0.45 + die.id * 0.08,
+          y: 0.32 + die.id * 0.05,
+          z: 0.36 + die.id * 0.06,
         },
         true
       );

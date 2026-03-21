@@ -6,4 +6,4 @@ export type DieSeed = {
   selected: boolean;
 };
 
-export type RollPhase = 'idle' | 'loading' | 'pouring';
+export type RollPhase = 'idle' | 'loading' | 'pouring' | 'settling';

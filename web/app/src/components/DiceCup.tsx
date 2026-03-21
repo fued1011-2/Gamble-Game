@@ -16,14 +16,17 @@ export function DiceCup({ rollPhase }: { rollPhase: RollPhase }) {
       frame += 1;
       if (rollPhase === 'loading') {
         const t = frame / 60;
-        group.position.set(CUP_POSITION[0], CUP_POSITION[1] + Math.sin(t * 14) * 0.12, CUP_POSITION[2]);
-        group.rotation.set(-0.22 + Math.sin(t * 10) * 0.06, 0, Math.sin(t * 12) * 0.1);
+        group.position.set(CUP_POSITION[0], CUP_POSITION[1] + Math.sin(t * 12) * 0.08, CUP_POSITION[2]);
+        group.rotation.set(-0.2 + Math.sin(t * 8) * 0.04, 0, Math.sin(t * 10) * 0.06);
       } else if (rollPhase === 'pouring') {
-        group.position.set(CUP_POSITION[0] + 0.15, CUP_POSITION[1] - 0.05, CUP_POSITION[2] - 0.35);
-        group.rotation.set(-1.08, 0, 0.18);
+        group.position.set(CUP_POSITION[0] + 0.28, CUP_POSITION[1] - 0.24, CUP_POSITION[2] - 0.82);
+        group.rotation.set(-1.62, 0, 0.24);
+      } else if (rollPhase === 'settling') {
+        group.position.set(CUP_POSITION[0] + 0.18, CUP_POSITION[1] - 0.12, CUP_POSITION[2] - 0.36);
+        group.rotation.set(-0.78, 0, 0.12);
       } else {
         group.position.set(...CUP_POSITION);
-        group.rotation.set(-0.22, 0, 0);
+        group.rotation.set(-0.2, 0, 0);
       }
       raf = requestAnimationFrame(animate);
     };
