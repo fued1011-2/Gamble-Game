@@ -12,6 +12,7 @@ type DieSeed = {
   selected: boolean;
 };
 
+const CUP_POSITION: [number, number, number] = [0, 4.4, 6.2];
 const INITIAL_DICE: DieSeed[] = [
   { id: 1, position: [-3.75, 2.2, 0.35], selected: false },
   { id: 2, position: [-2.25, 2.3, -0.25], selected: false },
@@ -99,17 +100,59 @@ function DieMesh({ selected }: { selected: boolean }) {
   );
 }
 
+function DiceCup({ isRolling }: { isRolling: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    const group = groupRef.current;
+    if (!group) return;
+    let frame = 0;
+    let raf = 0;
+
+    const animate = () => {
+      frame += 1;
+      if (isRolling) {
+        const t = frame / 60;
+        group.position.set(CUP_POSITION[0], CUP_POSITION[1] + Math.sin(t * 14) * 0.18, CUP_POSITION[2]);
+        group.rotation.set(-0.18 + Math.sin(t * 10) * 0.08, 0, Math.sin(t * 12) * 0.12);
+      } else {
+        group.position.set(...CUP_POSITION);
+        group.rotation.set(-0.18, 0, 0);
+      }
+      raf = requestAnimationFrame(animate);
+    };
+
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, [isRolling]);
+
+  return (
+    <group ref={groupRef} position={CUP_POSITION} rotation={[-0.18, 0, 0]}>
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.95, 1.2, 2.2, 28, 1, true]} />
+        <meshStandardMaterial color="#26211b" roughness={0.72} metalness={0.1} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh position={[0, -1.08, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[1.18, 1.18, 0.18, 28]} />
+        <meshStandardMaterial color="#1b1713" roughness={0.85} metalness={0.06} />
+      </mesh>
+      <mesh position={[0, 1.12, 0]} castShadow>
+        <torusGeometry args={[1.08, 0.08, 12, 28]} />
+        <meshStandardMaterial color="#56473a" roughness={0.5} metalness={0.12} />
+      </mesh>
+    </group>
+  );
+}
+
 function TrayColliders() {
   return (
-    <>
-      <RigidBody type="fixed" colliders={false}>
-        <CuboidCollider args={[5.6, 0.11, 5.6]} position={[0, 0, 0]} restitution={0.15} friction={0.9} />
-        <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, -5.25]} restitution={0.2} friction={0.8} />
-        <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, 5.25]} restitution={0.2} friction={0.8} />
-        <CuboidCollider args={[0.225, 0.675, 5.45]} position={[-5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
-        <CuboidCollider args={[0.225, 0.675, 5.45]} position={[5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
-      </RigidBody>
-    </>
+    <RigidBody type="fixed" colliders={false}>
+      <CuboidCollider args={[5.6, 0.11, 5.6]} position={[0, 0, 0]} restitution={0.15} friction={0.9} />
+      <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, -5.25]} restitution={0.2} friction={0.8} />
+      <CuboidCollider args={[5.675, 0.675, 0.225]} position={[0, 0.72, 5.25]} restitution={0.2} friction={0.8} />
+      <CuboidCollider args={[0.225, 0.675, 5.45]} position={[-5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
+      <CuboidCollider args={[0.225, 0.675, 5.45]} position={[5.25, 0.72, 0]} restitution={0.2} friction={0.8} />
+    </RigidBody>
   );
 }
 
@@ -120,12 +163,10 @@ function TrayVisual() {
         <boxGeometry args={[11.2, 0.22, 11.2]} />
         <meshStandardMaterial color="#7a1f1f" roughness={0.96} metalness={0.03} />
       </mesh>
-
       <mesh receiveShadow position={[0, 0.18, 0]}>
         <boxGeometry args={[10.6, 0.08, 10.6]} />
         <meshStandardMaterial color="#922828" roughness={0.92} metalness={0.02} />
       </mesh>
-
       <mesh receiveShadow position={[0, 0.72, -5.25]}>
         <boxGeometry args={[11.35, 1.35, 0.45]} />
         <meshStandardMaterial color="#241a16" roughness={0.82} metalness={0.08} />
@@ -142,7 +183,6 @@ function TrayVisual() {
         <boxGeometry args={[0.45, 1.35, 10.9]} />
         <meshStandardMaterial color="#241a16" roughness={0.82} metalness={0.08} />
       </mesh>
-
       <mesh receiveShadow position={[0, 0.46, -4.45]}>
         <boxGeometry args={[9.5, 0.05, 1.25]} />
         <meshStandardMaterial color="#304f2e" roughness={0.88} metalness={0.02} />
@@ -173,20 +213,19 @@ function PhysicsDie({
     body.setAngvel({ x: 0, y: 0, z: 0 }, true);
 
     if (!die.selected) {
-      const impulseScale = 2.2 + die.id * 0.18;
       body.applyImpulse(
         {
-          x: (die.id % 2 === 0 ? -1 : 1) * 0.8 * impulseScale,
-          y: 2.5 + die.id * 0.15,
-          z: (die.id % 3 === 0 ? -1 : 1) * 0.55 * impulseScale,
+          x: (die.id - 3.5) * 0.4,
+          y: 1.8 + die.id * 0.08,
+          z: -4.8 - die.id * 0.18,
         },
         true
       );
       body.applyTorqueImpulse(
         {
-          x: 1.6 + die.id * 0.4,
-          y: 1.1 + die.id * 0.35,
-          z: 1.4 + die.id * 0.28,
+          x: 2.2 + die.id * 0.45,
+          y: 1.5 + die.id * 0.32,
+          z: 1.8 + die.id * 0.28,
         },
         true
       );
@@ -196,6 +235,7 @@ function PhysicsDie({
   useEffect(() => {
     let frame = 0;
     let stoppedFrames = 0;
+    let raf = 0;
 
     const poll = () => {
       const body = bodyRef.current;
@@ -206,11 +246,8 @@ function PhysicsDie({
       const lin = body.linvel();
       const motion = Math.abs(ang.x) + Math.abs(ang.y) + Math.abs(ang.z) + Math.abs(lin.x) + Math.abs(lin.y) + Math.abs(lin.z);
 
-      if (motion < 0.08) {
-        stoppedFrames += 1;
-      } else {
-        stoppedFrames = 0;
-      }
+      if (motion < 0.08) stoppedFrames += 1;
+      else stoppedFrames = 0;
 
       if (frame > 20 && stoppedFrames > 8) {
         const rot = body.rotation();
@@ -219,10 +256,11 @@ function PhysicsDie({
         return;
       }
 
-      requestAnimationFrame(poll);
+      raf = requestAnimationFrame(poll);
     };
 
-    requestAnimationFrame(poll);
+    raf = requestAnimationFrame(poll);
+    return () => cancelAnimationFrame(raf);
   }, [die.id, die.position, onValueChange, isRolling]);
 
   return (
@@ -247,14 +285,7 @@ export default function App() {
   const [dice, setDice] = useState(INITIAL_DICE);
   const [rollCount, setRollCount] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
-  const [detectedValues, setDetectedValues] = useState<Record<number, FaceValue>>({
-    1: 1,
-    2: 1,
-    3: 1,
-    4: 1,
-    5: 1,
-    6: 1,
-  });
+  const [detectedValues, setDetectedValues] = useState<Record<number, FaceValue>>({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
 
   const updateDetectedValue = (id: number, value: FaceValue) => {
     setDetectedValues((current) => (current[id] === value ? current : { ...current, [id]: value }));
@@ -263,10 +294,7 @@ export default function App() {
   const toggleDie = (id: number) => {
     if (isRolling) return;
     setDice((current) => {
-      const toggled = current.map((die) =>
-        die.id === id ? { ...die, selected: !die.selected } : die
-      );
-
+      const toggled = current.map((die) => (die.id === id ? { ...die, selected: !die.selected } : die));
       const selected = toggled.filter((die) => die.selected).sort((a, b) => a.id - b.id);
       const unselected = toggled.filter((die) => !die.selected).sort((a, b) => a.id - b.id);
 
@@ -277,7 +305,7 @@ export default function App() {
 
       const reflowedUnselected = unselected.map((die, index) => ({
         ...die,
-        position: [-3.75 + index * 1.5, 2.2 + (index % 2) * 0.12, (index % 3) * 0.32 - 0.32] as [number, number, number],
+        position: [CUP_POSITION[0] + (index - 2.5) * 0.18, CUP_POSITION[1] - 0.4 + (index % 2) * 0.12, CUP_POSITION[2] + ((index % 3) - 1) * 0.14] as [number, number, number],
       }));
 
       return [...reflowedSelected, ...reflowedUnselected].sort((a, b) => a.id - b.id);
@@ -296,15 +324,15 @@ export default function App() {
           : {
               ...die,
               position: [
-                -3.75 + index * 1.5,
-                2.4 + ((rollCount + index) % 2) * 0.18,
-                ((index + rollCount) % 3) * 0.48 - 0.48,
+                CUP_POSITION[0] + (index - 2.5) * 0.18,
+                CUP_POSITION[1] - 0.35 + (index % 2) * 0.16,
+                CUP_POSITION[2] + ((index % 3) - 1) * 0.14,
               ],
             }
       )
     );
 
-    setTimeout(() => setIsRolling(false), 1800);
+    setTimeout(() => setIsRolling(false), 1900);
   };
 
   const reset = () => {
@@ -314,21 +342,15 @@ export default function App() {
     setDetectedValues({ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 });
   };
 
-  const selectedDice = useMemo(
-    () => dice.filter((die) => die.selected).map((die) => ({ ...die, topValue: detectedValues[die.id] })),
-    [dice, detectedValues]
-  );
-  const activeDice = useMemo(
-    () => dice.filter((die) => !die.selected).map((die) => ({ ...die, topValue: detectedValues[die.id] })),
-    [dice, detectedValues]
-  );
+  const selectedDice = useMemo(() => dice.filter((die) => die.selected).map((die) => ({ ...die, topValue: detectedValues[die.id] })), [dice, detectedValues]);
+  const activeDice = useMemo(() => dice.filter((die) => !die.selected).map((die) => ({ ...die, topValue: detectedValues[die.id] })), [dice, detectedValues]);
 
   return (
     <div className="app-shell">
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1C: echter Physics-Stack mit Rapier, Kollisionen und Top-Face-Erkennung.</p>
+          <p>Arbeitsblock 1D: Becher-basierter Wurf mit echter Physik und Top-Face-Erkennung.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6
@@ -338,12 +360,12 @@ export default function App() {
       </div>
 
       <div className="controls">
-        <button onClick={rollDice} disabled={isRolling}>{isRolling ? 'Rolling…' : 'Roll Physics Demo'}</button>
+        <button onClick={rollDice} disabled={isRolling}>{isRolling ? 'Rolling…' : 'Roll From Cup'}</button>
         <button onClick={reset} disabled={isRolling}>Reset</button>
       </div>
 
       <div className="hint-panel">
-        <strong>Spike-Fokus:</strong> Würfel wirklich physisch werfen, im Tray landen lassen und die obere Seite aus der echten Endlage erkennen.
+        <strong>Spike-Fokus:</strong> aktive Würfel in einen Becher sammeln, aus dem Becher in den Tray schütten und die obere Seite aus der echten Endlage erkennen.
       </div>
 
       <div className="value-panel">
@@ -359,19 +381,13 @@ export default function App() {
         <pointLight position={[-4.5, 7, -2.5]} intensity={13} color="#ffd9a0" />
         <pointLight position={[4.5, 5.5, 3.5]} intensity={7} color="#b8d7ff" />
 
+        <DiceCup isRolling={isRolling} />
         <Physics gravity={[0, -12, 0]}>
           <TrayColliders />
           {dice.map((die) => (
-            <PhysicsDie
-              key={`${die.id}-${rollCount}`}
-              die={die}
-              onToggle={toggleDie}
-              onValueChange={updateDetectedValue}
-              isRolling={isRolling}
-            />
+            <PhysicsDie key={`${die.id}-${rollCount}`} die={die} onToggle={toggleDie} onValueChange={updateDetectedValue} isRolling={isRolling} />
           ))}
         </Physics>
-
         <TrayVisual />
         <ContactShadows position={[0, 0.12, 0]} opacity={0.5} scale={20} blur={2.4} far={10} />
         <OrbitControls enablePan={false} minPolarAngle={0.75} maxPolarAngle={1.25} minDistance={8.5} maxDistance={14} />
