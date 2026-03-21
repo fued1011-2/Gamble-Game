@@ -16,19 +16,31 @@ function PipFace({ value }: { value: FaceValue }) {
 }
 
 export function DieMesh({ selected }: { selected: boolean }) {
-  const bodyColor = selected ? '#fff4ba' : '#f7f1df';
+  const bodyColor = selected ? '#fff1a8' : '#f7f1df';
 
   return (
     <group>
+      {selected && (
+        <mesh position={[0, -0.49, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <ringGeometry args={[0.44, 0.64, 40]} />
+          <meshStandardMaterial
+            color="#ffd24a"
+            emissive="#b88a12"
+            emissiveIntensity={0.28}
+            transparent
+            opacity={0.95}
+          />
+        </mesh>
+      )}
       <RoundedBox args={[0.86, 0.86, 0.86]} radius={0.09} smoothness={5} castShadow receiveShadow>
         <meshPhysicalMaterial
           color={bodyColor}
-          roughness={0.42}
-          metalness={0.04}
-          clearcoat={0.35}
-          clearcoatRoughness={0.35}
-          emissive={selected ? '#d3a400' : '#000000'}
-          emissiveIntensity={selected ? 0.14 : 0}
+          roughness={0.36}
+          metalness={0.05}
+          clearcoat={0.44}
+          clearcoatRoughness={0.26}
+          emissive={selected ? '#d49d00' : '#000000'}
+          emissiveIntensity={selected ? 0.18 : 0}
         />
       </RoundedBox>
       {FACE_CONFIG.map((face) => (
@@ -43,4 +55,3 @@ export function DieMesh({ selected }: { selected: boolean }) {
     </group>
   );
 }
-

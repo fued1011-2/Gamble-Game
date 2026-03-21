@@ -27,3 +27,4 @@
 - Würfel werden jetzt erst nach echter Ruhephase statt zu frühem Fix-Timer ausgerichtet
 - Ruhephase nach dem Wurf verlängert und Fallback gegen dauerhaft hängenden Rolling-Zustand ergänzt
 - Auswahlfluss korrigiert: aktive Würfel bleiben beim Selektieren im Tray statt in den Becher zurückzuspringen
+- Keep-/Selection-Layer weiter geschärft: aktive und zurückgelegte Würfel visuell klarer getrennt

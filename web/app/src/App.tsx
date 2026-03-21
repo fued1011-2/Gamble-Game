@@ -225,7 +225,7 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Spike-Fokus:</strong> aktive Würfel kontrolliert im Becher sammeln, sichtbar ausgießen und mit klarer Keep-Zone sowie lesbaren Endlagen im Tray landen lassen.
+        <strong>Aktueller Fokus:</strong> zurückgelegte Würfel klar oben sammeln, aktive Würfel unten lesbar im Tray halten und den Auswahlfluss näher an echtes Spielverhalten bringen.
       </div>
 
       <div className="value-panel">
