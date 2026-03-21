@@ -56,7 +56,8 @@ canvas {
 }
 
 .hud-box,
-.hint-panel {
+.hint-panel,
+.value-panel {
   background: rgba(244, 242, 233, 0.9);
   color: #171717;
   border: 1px solid rgba(0, 0, 0, 0.3);
@@ -102,8 +103,21 @@ canvas {
   right: 1.25rem;
   bottom: 5.9rem;
   z-index: 10;
-  max-width: 340px;
+  max-width: 360px;
   padding: 0.9rem 1rem;
+}
+
+.value-panel {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 5.9rem;
+  z-index: 10;
+  min-width: 280px;
+  padding: 0.9rem 1rem;
+}
+
+.value-panel div + div {
+  margin-top: 0.35rem;
 }
 
 @media (max-width: 800px) {
@@ -112,14 +126,22 @@ canvas {
   }
 
   .hud-box,
-  .hint-panel {
+  .hint-panel,
+  .value-panel {
     max-width: 100%;
   }
 
   .hint-panel {
     left: 1rem;
     right: 1rem;
+    bottom: 11rem;
+  }
+
+  .value-panel {
+    left: 1rem;
+    right: 1rem;
     bottom: 6.8rem;
+    min-width: 0;
   }
 
   .controls {

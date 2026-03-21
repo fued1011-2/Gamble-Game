@@ -3,24 +3,25 @@ import { ContactShadows, OrbitControls, RoundedBox } from '@react-three/drei';
 import { useMemo, useState } from 'react';
 import * as THREE from 'three';
 
+type FaceValue = 1 | 2 | 3 | 4 | 5 | 6;
+
 type DieState = {
   id: number;
   position: [number, number, number];
   rotation: [number, number, number];
   selected: boolean;
-  value: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 const INITIAL_DICE: DieState[] = [
-  { id: 1, position: [-3.75, 0.75, 0.35], rotation: [0.12, 0.3, -0.18], selected: false, value: 1 },
-  { id: 2, position: [-2.25, 0.72, -0.25], rotation: [-0.2, -0.45, 0.2], selected: false, value: 2 },
-  { id: 3, position: [-0.75, 0.74, 0.1], rotation: [0.35, 0.15, -0.28], selected: false, value: 3 },
-  { id: 4, position: [0.75, 0.76, -0.18], rotation: [-0.1, 0.4, 0.25], selected: false, value: 4 },
-  { id: 5, position: [2.25, 0.73, 0.24], rotation: [0.22, -0.2, 0.42], selected: false, value: 5 },
-  { id: 6, position: [3.75, 0.71, -0.08], rotation: [-0.32, 0.22, -0.2], selected: false, value: 6 },
+  { id: 1, position: [-3.75, 0.75, 0.35], rotation: [0.12, 0.3, -0.18], selected: false },
+  { id: 2, position: [-2.25, 0.72, -0.25], rotation: [-0.2, -0.45, 0.2], selected: false },
+  { id: 3, position: [-0.75, 0.74, 0.1], rotation: [0.35, 0.15, -0.28], selected: false },
+  { id: 4, position: [0.75, 0.76, -0.18], rotation: [-0.1, 0.4, 0.25], selected: false },
+  { id: 5, position: [2.25, 0.73, 0.24], rotation: [0.22, -0.2, 0.42], selected: false },
+  { id: 6, position: [3.75, 0.71, -0.08], rotation: [-0.32, 0.22, -0.2], selected: false },
 ];
 
-const FACE_OFFSETS: Record<number, [number, number][]> = {
+const FACE_OFFSETS: Record<FaceValue, [number, number][]> = {
   1: [[0, 0]],
   2: [[-0.22, -0.22], [0.22, 0.22]],
   3: [[-0.24, -0.24], [0, 0], [0.24, 0.24]],
@@ -29,9 +30,23 @@ const FACE_OFFSETS: Record<number, [number, number][]> = {
   6: [[-0.22, -0.25], [0.22, -0.25], [-0.22, 0], [0.22, 0], [-0.22, 0.25], [0.22, 0.25]],
 };
 
-function PipFace({ value }: { value: 1 | 2 | 3 | 4 | 5 | 6 }) {
+const FACE_CONFIG: Array<{
+  value: FaceValue;
+  position: [number, number, number];
+  rotation: [number, number, number];
+  localNormal: THREE.Vector3;
+}> = [
+  { value: 1, position: [0, 0, 0.505], rotation: [0, 0, 0], localNormal: new THREE.Vector3(0, 0, 1) },
+  { value: 6, position: [0, 0, -0.505], rotation: [0, Math.PI, 0], localNormal: new THREE.Vector3(0, 0, -1) },
+  { value: 2, position: [0.505, 0, 0], rotation: [0, Math.PI / 2, 0], localNormal: new THREE.Vector3(1, 0, 0) },
+  { value: 5, position: [-0.505, 0, 0], rotation: [0, -Math.PI / 2, 0], localNormal: new THREE.Vector3(-1, 0, 0) },
+  { value: 3, position: [0, 0.505, 0], rotation: [-Math.PI / 2, 0, 0], localNormal: new THREE.Vector3(0, 1, 0) },
+  { value: 4, position: [0, -0.505, 0], rotation: [Math.PI / 2, 0, 0], localNormal: new THREE.Vector3(0, -1, 0) },
+];
+
+function PipFace({ value }: { value: FaceValue }) {
   return (
-    <group position={[0, 0, 0.505]}>
+    <group>
       {FACE_OFFSETS[value].map(([x, y], index) => (
         <mesh key={`${value}-${index}`} position={[x, y, 0]}>
           <circleGeometry args={[0.075, 20]} />
@@ -40,6 +55,26 @@ function PipFace({ value }: { value: 1 | 2 | 3 | 4 | 5 | 6 }) {
       ))}
     </group>
   );
+}
+
+function getTopFace(rotation: [number, number, number]): FaceValue {
+  const euler = new THREE.Euler(rotation[0], rotation[1], rotation[2]);
+  const quaternion = new THREE.Quaternion().setFromEuler(euler);
+  const worldUp = new THREE.Vector3(0, 1, 0);
+
+  let bestValue: FaceValue = 1;
+  let bestDot = -Infinity;
+
+  for (const face of FACE_CONFIG) {
+    const normal = face.localNormal.clone().applyQuaternion(quaternion);
+    const dot = normal.dot(worldUp);
+    if (dot > bestDot) {
+      bestDot = dot;
+      bestValue = face.value;
+    }
+  }
+
+  return bestValue;
 }
 
 function Die({ die, onToggle }: { die: DieState; onToggle: (id: number) => void }) {
@@ -58,7 +93,12 @@ function Die({ die, onToggle }: { die: DieState; onToggle: (id: number) => void 
           emissiveIntensity={die.selected ? 0.14 : 0}
         />
       </RoundedBox>
-      <PipFace value={die.value} />
+
+      {FACE_CONFIG.map((face) => (
+        <group key={face.value} position={face.position} rotation={face.rotation}>
+          <PipFace value={face.value} />
+        </group>
+      ))}
     </group>
   );
 }
@@ -101,13 +141,23 @@ function Tray() {
   );
 }
 
-function valueFromRoll(seed: number) {
-  return (((seed % 6) + 6) % 6) + 1 as 1 | 2 | 3 | 4 | 5 | 6;
+function nextRotation(seed: number, index: number): [number, number, number] {
+  const step = seed + index + 1;
+  return [
+    (step * 1.17) % (Math.PI * 2),
+    (step * 0.91) % (Math.PI * 2),
+    (step * 1.41) % (Math.PI * 2),
+  ];
 }
 
 export default function App() {
   const [dice, setDice] = useState(INITIAL_DICE);
   const [rollCount, setRollCount] = useState(0);
+
+  const diceWithValues = useMemo(
+    () => dice.map((die) => ({ ...die, topValue: getTopFace(die.rotation) })),
+    [dice]
+  );
 
   const toggleDie = (id: number) => {
     setDice((current) => {
@@ -127,11 +177,7 @@ export default function App() {
       const reflowedUnselected = unselected.map((die, index) => ({
         ...die,
         position: [-3.75 + index * 1.5, 0.75 + (index % 2) * 0.03, (index % 3) * 0.24 - 0.24] as [number, number, number],
-        rotation: [
-          ((index + 1) * 0.18) % 0.5,
-          ((index + 2) * -0.21) % 0.5,
-          ((index + 3) * 0.16) % 0.5,
-        ] as [number, number, number],
+        rotation: nextRotation(index + 1, die.id),
       }));
 
       return [...reflowedSelected, ...reflowedUnselected].sort((a, b) => a.id - b.id);
@@ -146,23 +192,17 @@ export default function App() {
 
       const rerolled = unselected.map((die, index) => ({
         ...die,
-        value: valueFromRoll(die.id + rollCount + index + 1),
         position: [
           -3.75 + index * 1.5,
           0.75 + ((index + rollCount) % 2) * 0.05,
           ((index + rollCount) % 3) * 0.32 - 0.32,
         ] as [number, number, number],
-        rotation: [
-          ((rollCount + 1) * 0.7 + index * 0.15) % Math.PI,
-          ((rollCount + 1) * -0.45 + index * 0.22) % Math.PI,
-          ((rollCount + 1) * 0.35 + index * 0.31) % Math.PI,
-        ] as [number, number, number],
+        rotation: nextRotation(rollCount + die.id, index),
       }));
 
       const banked = selected.map((die, index) => ({
         ...die,
         position: [-3.6 + index * 1.45, 0.78, -4.45] as [number, number, number],
-        rotation: [0, 0, 0] as [number, number, number],
       }));
 
       return [...banked, ...rerolled].sort((a, b) => a.id - b.id);
@@ -174,23 +214,20 @@ export default function App() {
     setRollCount(0);
   };
 
-  const selectedCount = dice.filter((die) => die.selected).length;
-  const selectedValues = useMemo(
-    () => dice.filter((die) => die.selected).map((die) => die.value).join(', ') || 'none',
-    [dice]
-  );
+  const selectedDice = diceWithValues.filter((die) => die.selected);
+  const activeDice = diceWithValues.filter((die) => !die.selected);
 
   return (
     <div className="app-shell">
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 1: Renderer und Grundgefühl absichern.</p>
+          <p>Arbeitsblock 1B: Face-Mapping, Top-Face-Erkennung und Roll-Logik.</p>
         </div>
         <div className="hud-box">
-          <strong>Selected Dice:</strong> {selectedCount} / 6
+          <strong>Selected Dice:</strong> {selectedDice.length} / 6
           <br />
-          <strong>Banked Values:</strong> {selectedValues}
+          <strong>Banked Top Values:</strong> {selectedDice.map((die) => die.topValue).join(', ') || 'none'}
         </div>
       </div>
 
@@ -200,7 +237,12 @@ export default function App() {
       </div>
 
       <div className="hint-panel">
-        <strong>Spike-Ziel:</strong> hochwertiger Tray-Eindruck, klarere Würfel, Banking-Zone und saubere Interaktion.
+        <strong>Spike-Fokus:</strong> echte Würfelseiten, Top-Face-Erkennung und tragfähige Basis für spätere Spielregeln.
+      </div>
+
+      <div className="value-panel">
+        <div><strong>Active Top Values:</strong> {activeDice.map((die) => die.topValue).join(', ') || 'none'}</div>
+        <div><strong>Detected Total:</strong> {activeDice.reduce((sum, die) => sum + die.topValue, 0)}</div>
       </div>
 
       <Canvas shadows camera={{ position: [0, 8.4, 9.6], fov: 38 }}>
