@@ -1,5 +1,5 @@
 import { CuboidCollider, RigidBody, RapierRigidBody } from '@react-three/rapier';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { DieMesh } from './DieMesh';
 import { getTopFaceFromQuaternion } from '../lib/diceMath';
@@ -22,6 +22,7 @@ export function PhysicsDie({
 }) {
   const bodyRef = useRef<RapierRigidBody | null>(null);
   const lastPlacementKeyRef = useRef<string | undefined>(undefined);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     const body = bodyRef.current;
@@ -94,6 +95,14 @@ export function PhysicsDie({
     return () => cancelAnimationFrame(raf);
   }, [die.id, die.position, onValueChange, onSettled, isRolling, die.selected, rollPhase]);
 
+  useEffect(() => {
+    if (!hovered) return;
+    document.body.style.cursor = isRolling ? 'default' : 'pointer';
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [hovered, isRolling]);
+
   return (
     <RigidBody
       ref={bodyRef}
@@ -106,8 +115,18 @@ export function PhysicsDie({
       enabledRotations={[true, true, true]}
     >
       <CuboidCollider args={[0.36, 0.36, 0.36]} restitution={0.28} friction={0.95} />
-      <group onClick={() => !isRolling && onToggle(die.id)}>
-        <DieMesh selected={die.selected} />
+      <group
+        onClick={() => !isRolling && onToggle(die.id)}
+        onPointerOver={(event) => {
+          event.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={(event) => {
+          event.stopPropagation();
+          setHovered(false);
+        }}
+      >
+        <DieMesh selected={die.selected} hovered={hovered} interactive={!isRolling} />
       </group>
     </RigidBody>
   );

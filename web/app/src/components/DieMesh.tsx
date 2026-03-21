@@ -15,32 +15,42 @@ function PipFace({ value }: { value: FaceValue }) {
   );
 }
 
-export function DieMesh({ selected }: { selected: boolean }) {
-  const bodyColor = selected ? '#fff1a8' : '#f7f1df';
+export function DieMesh({
+  selected,
+  hovered,
+  interactive,
+}: {
+  selected: boolean;
+  hovered: boolean;
+  interactive: boolean;
+}) {
+  const bodyColor = selected ? '#fff1a8' : hovered ? '#fff7e8' : '#f7f1df';
+  const ringOpacity = selected ? 0.95 : hovered ? 0.38 : 0;
+  const ringColor = selected ? '#ffd24a' : '#f1e0a2';
 
   return (
-    <group>
-      {selected && (
+    <group scale={hovered && interactive ? 1.04 : 1}>
+      {(selected || hovered) && (
         <mesh position={[0, -0.49, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <ringGeometry args={[0.44, 0.64, 40]} />
           <meshStandardMaterial
-            color="#ffd24a"
-            emissive="#b88a12"
-            emissiveIntensity={0.28}
+            color={ringColor}
+            emissive={selected ? '#b88a12' : '#6f6130'}
+            emissiveIntensity={selected ? 0.28 : 0.12}
             transparent
-            opacity={0.95}
+            opacity={ringOpacity}
           />
         </mesh>
       )}
       <RoundedBox args={[0.86, 0.86, 0.86]} radius={0.09} smoothness={5} castShadow receiveShadow>
         <meshPhysicalMaterial
           color={bodyColor}
-          roughness={0.36}
+          roughness={hovered && interactive ? 0.3 : 0.36}
           metalness={0.05}
-          clearcoat={0.44}
+          clearcoat={hovered && interactive ? 0.5 : 0.44}
           clearcoatRoughness={0.26}
-          emissive={selected ? '#d49d00' : '#000000'}
-          emissiveIntensity={selected ? 0.18 : 0}
+          emissive={selected ? '#d49d00' : hovered ? '#5a4a19' : '#000000'}
+          emissiveIntensity={selected ? 0.18 : hovered ? 0.05 : 0}
         />
       </RoundedBox>
       {FACE_CONFIG.map((face) => (

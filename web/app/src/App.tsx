@@ -200,7 +200,7 @@ export default function App() {
       <div className="hud top">
         <div>
           <h1>Gamble Game Web Spike</h1>
-          <p>Arbeitsblock 3C: Keep-Zone ruhiger ordnen und Reflow für Auswahl klarer machen.</p>
+          <p>Arbeitsblock 3D: Auswahlfeedback per Hover-/Tap-Highlight schärfen, ohne die Ruhe im Tray zu zerstören.</p>
         </div>
         <div className="hud-box">
           <strong>Selected Dice:</strong> {selectedDice.length} / 6

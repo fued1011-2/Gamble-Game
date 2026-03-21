@@ -29,3 +29,4 @@
 - Auswahlfluss korrigiert: aktive Würfel bleiben beim Selektieren im Tray statt in den Becher zurückzuspringen
 - Keep-/Selection-Layer weiter geschärft: aktive und zurückgelegte Würfel visuell klarer getrennt
 - Keep-Zone ruhiger geordnet und optisch stärker als eigener Ablagebereich markiert
+- Auswahlfeedback verbessert: Hover-/Select-Highlight macht interaktive Würfel klarer erkennbar
